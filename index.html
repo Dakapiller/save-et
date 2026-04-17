@@ -2,7 +2,10 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f5f2ed">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Save Edifício Transparente — Porto</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='0' y='62' width='100' height='38' fill='%23c8873a' opacity='0.1'/%3E%3Cline x1='0' y1='62' x2='100' y2='62' stroke='%23c8873a' stroke-width='1.8'/%3E%3Crect x='12' y='8' width='76' height='54' fill='none' stroke='%23c8873a' stroke-width='1.8'/%3E%3Cline x1='12' y1='26' x2='88' y2='26' stroke='%23c8873a' stroke-width='0.8'/%3E%3Cline x1='12' y1='44' x2='88' y2='44' stroke='%23c8873a' stroke-width='0.8'/%3E%3Cline x1='37.3' y1='8' x2='37.3' y2='62' stroke='%23c8873a' stroke-width='0.8'/%3E%3Cline x1='62.6' y1='8' x2='62.6' y2='62' stroke='%23c8873a' stroke-width='0.8'/%3E%3Crect x='13' y='9' width='23.8' height='16.5' fill='%23c8873a' opacity='0.14'/%3E%3Crect x='63' y='9' width='24.5' height='16.5' fill='%23c8873a' opacity='0.14'/%3E%3Crect x='38' y='27' width='24.1' height='16.5' fill='%23c8873a' opacity='0.14'/%3E%3Crect x='13' y='45' width='23.8' height='16.5' fill='%23c8873a' opacity='0.14'/%3E%3Crect x='63' y='45' width='24.5' height='16.5' fill='%23c8873a' opacity='0.14'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -136,21 +139,57 @@
   .instructions-box { margin-top: 2.5rem; font-size: 0.78rem; color: var(--text-muted); font-weight: 300; max-width: 600px; padding: 1.5rem; background: var(--off-white); border-radius: 2px; border: 1px solid var(--border); line-height: 1.8; transition: border-color 0.4s; }
   @media (max-width: 960px) {
     .hero { grid-template-columns: 1fr; }
-    .hero-image-placeholder { min-height: 45vw; }
-    .hero-text { padding: 4rem 2rem; }
-    .about { grid-template-columns: 1fr; padding: 4rem 2rem; gap: 3rem; }
-    .reasons-grid { grid-template-columns: 1fr; }
+    .hero-image-placeholder { min-height: 50vw; }
+    .hero-text { padding: 3.5rem 1.5rem 2.5rem; }
+    .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+    .about { grid-template-columns: 1fr; padding: 3.5rem 1.5rem; gap: 2.5rem; }
+    .reasons-grid { grid-template-columns: 1fr 1fr; }
     .press-grid { grid-template-columns: 1fr; }
-    .contact { grid-template-columns: 1fr; padding: 4rem 2rem; }
-    section { padding: 5rem 2rem; }
-    .petition { padding: 5rem 2rem; }
+    .contact { grid-template-columns: 1fr; padding: 3.5rem 1.5rem; gap: 2.5rem; }
+    section { padding: 4rem 1.5rem; }
+    .petition { padding: 4rem 1.5rem; }
     .nav-center { display: none; }
-    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem 1.5rem; }
     .form-row { grid-template-columns: 1fr; }
     nav { padding: 0.85rem 1rem; }
+    .video-grid { grid-template-columns: 1fr 1fr; }
   }
-  @media (max-width: 480px) {
-    .lang-btn { padding: 0.25rem 0.4rem; font-size: 0.62rem; }
+  @media (max-width: 600px) {
+    .hero-text { padding: 2.5rem 1.25rem 2rem; }
+    .hero-title { font-size: clamp(2rem, 8vw, 2.8rem); }
+    .hero-sub { font-size: 0.95rem; max-width: 100%; }
+    .hero-stats { gap: 1.25rem; }
+    .stat-num { font-size: 1.8rem; }
+    .hero-image-placeholder { min-height: 55vw; }
+    .reasons-grid { grid-template-columns: 1fr; }
+    .video-grid { grid-template-columns: 1fr; }
+    section { padding: 3rem 1.25rem; }
+    .petition { padding: 3rem 1.25rem; }
+    .about { padding: 3rem 1.25rem; }
+    .contact { padding: 3rem 1.25rem; }
+    .section-title { font-size: clamp(1.6rem, 6vw, 2.2rem); }
+    .nav-right { gap: 0.4rem; }
+    .nav-cta { padding: 0.45rem 0.75rem; font-size: 0.72rem; }
+    .cd-num { font-size: clamp(1.5rem, 6vw, 2rem); }
+    .cd-lbl { font-size: 0.55rem; }
+    .btn-primary { margin-right: 0.75rem; padding: 0.8rem 1.5rem; font-size: 0.78rem; }
+    .btn-secondary { font-size: 0.78rem; }
+    footer { padding: 1.5rem 1.25rem; font-size: 0.72rem; }
+    .contact-link { padding: 1rem 1.25rem; font-size: 0.85rem; }
+    .reason-card { padding: 2rem 1.5rem; }
+    .press-card { padding: 1.25rem; }
+  }
+  @media (max-width: 400px) {
+    .lang-btn { padding: 0.22rem 0.35rem; font-size: 0.6rem; letter-spacing: 0.04em; }
+    .nav-logo { font-size: 0.85rem; }
+    .hero-title { font-size: 1.9rem; }
+    .hero-stats { gap: 1rem; }
+    .stat-num { font-size: 1.6rem; }
+    .cd-num { font-size: 1.4rem; }
+    .btn-primary, .btn-secondary { display: block; width: 100%; text-align: center; margin-right: 0; margin-bottom: 0.75rem; }
+  }
+  @supports (-webkit-touch-callout: none) {
+    input, select { font-size: 16px; }
   }
 </style>
 </head>
@@ -285,13 +324,7 @@
         <div class="video-name" data-i18n="video2_name"></div>
       </div>
     </div>
-    <div class="video-add" onclick="showAddVideoHelp()">
-      <div class="video-add-icon">+</div>
-      <div class="video-add-text" data-i18n="video_add_card"></div>
-      <a class="video-add-link" href="#video-instructions" data-i18n="video_add_how"></a>
-    </div>
   </div>
-  <p class="instructions-box" id="video-instructions" data-i18n="video_instructions"></p>
 </section>
 
 <section class="petition" id="petition">
