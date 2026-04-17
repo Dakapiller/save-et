@@ -282,8 +282,38 @@
   <h2 class="section-title" data-i18n="petition_title"></h2>
   <p class="section-body" data-i18n="petition_body"></p>
 
-  <div style="max-width:640px;margin:0 auto;">
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScWquseCmpRnLToSAaVErvxXnQN3wBJmroBYuLJP2sgwzUIuw/viewform?embedded=true" width="100%" height="820" frameborder="0" marginheight="0" marginwidth="0" style="border:1px solid var(--border);border-radius:2px;background:white;display:block;">A carregar…</iframe>
+  <div style="max-width:560px;margin:0 auto;background:white;border:1px solid var(--border);border-radius:2px;overflow:hidden;">
+    <div style="padding:2.5rem;" id="petition-form-wrapper">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:400;margin-bottom:1.5rem;text-align:center;" data-i18n="form_title"></h3>
+      <form id="petition-form" onsubmit="handleSign(event)">
+        <div class="form-row">
+          <div class="form-group"><label data-i18n="form_name"></label><input type="text" id="p-name" required data-i18n-placeholder="form_name_ph"></div>
+          <div class="form-group"><label data-i18n="form_email"></label><input type="email" id="p-email" required placeholder="email@example.com"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label data-i18n="form_org"></label><input type="text" id="p-org" data-i18n-placeholder="form_org_ph"></div>
+          <div class="form-group">
+            <label data-i18n="form_role"></label>
+            <select id="p-role">
+              <option value="" data-i18n="role_select"></option>
+              <option data-i18n="role_1"></option>
+              <option data-i18n="role_2"></option>
+              <option data-i18n="role_3"></option>
+              <option data-i18n="role_4"></option>
+              <option data-i18n="role_5"></option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:1rem;">
+          <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;font-weight:300;cursor:pointer;">
+            <input type="checkbox" id="p-consent" required style="width:auto;accent-color:var(--amber)">
+            <span data-i18n="form_consent"></span>
+          </label>
+        </div>
+        <button type="submit" class="form-submit" id="petition-submit-btn" data-i18n="form_submit"></button>
+        <p class="form-note" data-i18n="form_note"></p>
+      </form>
+    </div>
   </div>
 </section>
 
@@ -381,29 +411,42 @@ function renderSigned(){
     </div>`).join('');
 }
 
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBotHbef9K_izthwEcEGVVNlfV1B4V8NLnqd1NJD95C8jgvS0OtTCpR5QgeTLXC395/exec';
+
 function handleSign(e){
   e.preventDefault();
   const name = document.getElementById('p-name').value.trim();
   const email = document.getElementById('p-email').value.trim();
   const org = document.getElementById('p-org').value.trim();
   const role = document.getElementById('p-role').value;
-  const sigs = getSigs();
-  if (sigs.find(s=>s.email===email)){ alert(t('alert_dup')); return; }
-  sigs.push({name,email,org,role,date:new Date().toISOString()});
-  saveSigs(sigs);
-  updateCounter();
-  renderSigned();
-  const w = document.getElementById('petition-form-wrapper');
-  if(w) w.innerHTML = `
-    <div style="text-align:center;padding:2.5rem 1rem;">
-      <div style="font-size:2.2rem;margin-bottom:1rem;color:var(--amber)">✓</div>
-      <h3 style="font-family:'Playfair Display',serif;font-weight:400;margin-bottom:0.75rem">${t('ty_title')}, ${name}!</h3>
-      <p style="font-size:0.9rem;color:var(--text-muted);font-weight:300;max-width:340px;margin:0 auto 1.5rem">${t('ty_body')}</p>
-      <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap">
-        <a href="https://twitter.com/intent/tweet?text=${t('tweet')}&url=${encodeURIComponent(location.href)}" target="_blank" style="padding:0.6rem 1.2rem;background:var(--black);color:white;text-decoration:none;font-size:0.8rem;border-radius:2px">${t('share_x')}</a>
-        <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}" target="_blank" style="padding:0.6rem 1.2rem;background:var(--black);color:white;text-decoration:none;font-size:0.8rem;border-radius:2px">${t('share_fb')}</a>
-      </div>
-    </div>`;
+  const consent = document.getElementById('p-consent').checked;
+
+  const btn = document.getElementById('petition-submit-btn');
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({name, email, org, role, consent})
+  }).then(() => {
+    const w = document.getElementById('petition-form-wrapper');
+    if(w) w.innerHTML = `
+      <div style="text-align:center;padding:2.5rem 1rem;">
+        <div style="font-size:2.2rem;margin-bottom:1rem;color:var(--amber)">✓</div>
+        <h3 style="font-family:'Playfair Display',serif;font-weight:400;margin-bottom:0.75rem">${t('ty_title')}, ${name}!</h3>
+        <p style="font-size:0.9rem;color:var(--text-muted);font-weight:300;max-width:340px;margin:0 auto 1.5rem">${t('ty_body')}</p>
+        <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap">
+          <a href="https://twitter.com/intent/tweet?text=${t('tweet')}&url=${encodeURIComponent(location.href)}" target="_blank" style="padding:0.6rem 1.2rem;background:var(--black);color:white;text-decoration:none;font-size:0.8rem;border-radius:2px">${t('share_x')}</a>
+          <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}" target="_blank" style="padding:0.6rem 1.2rem;background:var(--black);color:white;text-decoration:none;font-size:0.8rem;border-radius:2px">${t('share_fb')}</a>
+        </div>
+      </div>`;
+  }).catch(() => {
+    btn.disabled = false;
+    btn.textContent = t('form_submit');
+    alert('Erro ao enviar. Por favor tente novamente.');
+  });
 }
 
 function openModal(src){ document.getElementById('modal-iframe').src=src+'?autoplay=1'; document.getElementById('video-modal').classList.add('active'); document.body.style.overflow='hidden'; }
