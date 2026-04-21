@@ -506,7 +506,7 @@ const SK = 'et_petition_v2';
 function getSigs(){ try { return JSON.parse(localStorage.getItem(SK)||'[]'); } catch(e){ return []; } }
 function saveSigs(s){ localStorage.setItem(SK, JSON.stringify(s)); }
 
-function updateCounter(){ const el = document.getElementById('signature-count'); if(el) el.textContent = getSigs().length; }
+function updateCounter(){ }
 
 function renderSigned(){
   const sigs = getSigs();
