@@ -6,11 +6,25 @@ import galleryOne from './assets/figma/photo-08.jpeg'
 import galleryTwo from './assets/figma/photo-05.jpeg'
 import galleryArrowNext from './assets/figma/vectors/gallery-arrow-next.svg'
 import galleryArrowPrev from './assets/figma/vectors/gallery-arrow-prev.svg'
-import personAna from './assets/figma/photo-11.jpeg'
-import personManuel from './assets/figma/photo-07.jpeg'
-import personMariana from './assets/figma/photo-09.jpeg'
-import personNome from './assets/figma/photo-13.jpeg'
-import personRicardo from './assets/figma/photo-02.jpeg'
+import personAlex from './assets/figma/people/alex.jpg'
+import personCatia from './assets/figma/people/catia.jpg'
+import personDiogo from './assets/figma/people/diogo.jpg'
+import personFernando from './assets/figma/people/fernando.jpg'
+import personGuilherme from './assets/figma/people/guilherme.jpg'
+import personHellen from './assets/figma/people/hellen.jpg'
+import personInesConsultora from './assets/figma/people/ines-consultora.jpg'
+import personInesDesigner from './assets/figma/people/ines-designer.jpg'
+import personJane from './assets/figma/people/jane.jpg'
+import personJoana from './assets/figma/people/joana.jpg'
+import personJoseMaria from './assets/figma/people/jose-maria.jpg'
+import personManuel from './assets/figma/people/manuel.jpg'
+import personMariana from './assets/figma/people/mariana.jpg'
+import personMarlon from './assets/figma/people/marlon.jpg'
+import personPatricia from './assets/figma/people/patricia.jpg'
+import personRaquel from './assets/figma/people/raquel.jpg'
+import personRebecca from './assets/figma/people/rebecca.jpg'
+import personRicardo from './assets/figma/people/ricardo.jpg'
+import personVanessa from './assets/figma/people/vanessa.jpg'
 import arrowNext from './assets/figma/vectors/arrow-next.svg'
 import arrowPrev from './assets/figma/vectors/arrow-prev.svg'
 import campaignArrow from './assets/figma/vectors/campaign-arrow.svg'
@@ -39,7 +53,7 @@ import statPeople from './assets/figma/vectors/stat-people.svg'
 import statRestaurant from './assets/figma/vectors/stat-restaurant.svg'
 import whatsappIcon from './assets/figma/vectors/whatsapp.svg'
 import xIcon from './assets/figma/vectors/x.svg'
-import { content, type LanguageCode, languages } from './content'
+import { content, type LanguageCode, languages, type PersonId } from './content'
 import {
   countUpTween,
   dur,
@@ -66,21 +80,29 @@ type PeopleImageStyle = CSSProperties &
     string
   >
 
-const peopleImages = [
-  personMariana,
-  personRicardo,
-  personNome,
-  personManuel,
-  personAna,
-] as const
+const peopleImages = {
+  alex: personAlex,
+  mariana: personMariana,
+  ricardo: personRicardo,
+  fernando: personFernando,
+  raquel: personRaquel,
+  manuel: personManuel,
+  diogo: personDiogo,
+  'ines-consultora': personInesConsultora,
+  catia: personCatia,
+  marlon: personMarlon,
+  patricia: personPatricia,
+  guilherme: personGuilherme,
+  'ines-designer': personInesDesigner,
+  joana: personJoana,
+  jane: personJane,
+  vanessa: personVanessa,
+  'jose-maria': personJoseMaria,
+  rebecca: personRebecca,
+  hellen: personHellen,
+} satisfies Record<PersonId, string>
 
-const peopleImageLayouts = [
-  { left: -32.816, top: -65.632, width: 270.994, height: 406.292 },
-  { left: -3.128, top: -49.128, width: 254, height: 380 },
-  { left: -0.128, top: -71.128, width: 260, height: 390 },
-  { left: -2.128, top: -46.128, width: 250, height: 376 },
-  { left: -32.816, top: -65.632, width: 270.994, height: 406.292 },
-] as const
+const peopleImageLayout = { left: 0, top: 0, width: 237.916, height: 281.28 } as const
 
 const statIcons = [statPeople, statBuilding, statRestaurant, statCalendar] as const
 const ecosystemConnectors = [
@@ -1135,7 +1157,7 @@ function App() {
             </h2>
             <div className="people-viewport">
               <div className="people-track">
-                {copy.people.map((person, index) => (
+                {copy.people.map((person) => (
                   <article className="person-card" key={`${person.name}-${person.role}`}>
                     <div className="portrait-frame">
                       <img alt="" aria-hidden="true" className="portrait-frame-lines" src={personCardFrame} />
@@ -1143,13 +1165,13 @@ function App() {
                         <img
                           alt=""
                           className="portrait-image"
-                          src={peopleImages[index]}
+                          src={peopleImages[person.id]}
                           style={
                             {
-                              '--portrait-image-height': `${peopleImageLayouts[index].height}px`,
-                              '--portrait-image-left': `${peopleImageLayouts[index].left}px`,
-                              '--portrait-image-top': `${peopleImageLayouts[index].top}px`,
-                              '--portrait-image-width': `${peopleImageLayouts[index].width}px`,
+                              '--portrait-image-height': `${peopleImageLayout.height}px`,
+                              '--portrait-image-left': `${peopleImageLayout.left}px`,
+                              '--portrait-image-top': `${peopleImageLayout.top}px`,
+                              '--portrait-image-width': `${peopleImageLayout.width}px`,
                             } as PeopleImageStyle
                           }
                         />
@@ -1164,7 +1186,12 @@ function App() {
                   </article>
                 ))}
               </div>
-              <div aria-hidden="true" className="people-fade people-fade--left" />
+              <div
+                aria-hidden="true"
+                className={
+                  peopleIndex > 0 ? 'people-fade people-fade--left' : 'people-fade people-fade--left people-fade--hidden'
+                }
+              />
               <div aria-hidden="true" className="people-fade" />
               <ArrowButton
                 className="people-prev"

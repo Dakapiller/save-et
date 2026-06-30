@@ -807,28 +807,29 @@ select {
 }
 
 .people-fade {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 74%);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 137px, #ffffff);
   height: 720px;
   pointer-events: none;
   position: absolute;
-  right: 0;
+  right: calc(-1 * var(--side));
   top: -121px;
-  width: 185px;
+  width: calc(var(--side) + 185px);
   z-index: 3;
 }
 
-/* Mirror the right fade so cards melt into the page on the left edge too,
-   instead of hard-overflowing past the prev button on wide screens. The
-   viewport is wider than the centred .wrap, so as the track slides, cards
-   exit into the left page margin (--side): cover that margin with solid white
-   and fade over the inner 185px, matching the right edge's falloff. */
+/* Mirror the right fade so cards melt into the page on the left edge too. */
 .people-fade--left {
-  background: linear-gradient(to right, #ffffff, #ffffff calc(100% - 185px), rgba(255, 255, 255, 0));
+  background: linear-gradient(90deg, #ffffff, #ffffff calc(100% - 137px), rgba(255, 255, 255, 0));
   height: 100%;
   left: calc(-1 * var(--side) - 4px);
   right: auto;
   top: 0;
-  width: calc(var(--side) + 193px);
+  width: calc(var(--side) + 4px);
+}
+
+.people-fade--hidden {
+  opacity: 0;
+  visibility: hidden;
 }
 
 .person-card {
@@ -943,8 +944,12 @@ select {
 
 .person-meta span:first-of-type {
   color: var(--muted);
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   left: 0;
-  width: 77px;
+  width: 132px;
 }
 
 .person-meta span:last-child {
@@ -2057,6 +2062,10 @@ select {
     font-size: 9px;
     letter-spacing: 0.45px;
     top: 29px;
+  }
+
+  .person-meta span:first-of-type {
+    width: 92px;
   }
 
   .person-meta span:last-child {
