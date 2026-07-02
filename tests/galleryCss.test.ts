@@ -91,3 +91,14 @@ test('gallery hides the arrows in the mobile/tablet range (swipe-only)', () => {
     /@media \(max-width: 1100px\) \{[\s\S]*?\.gallery-fade,\n {2}\.gallery-fade--left,\n {2}\.gallery-prev,\n {2}\.gallery-next \{[\s\S]*?display: none;[\s\S]*?\}/,
   )
 })
+
+test('mobile gallery clips at the viewport wrapper, not the moving track', () => {
+  assert.match(
+    css,
+    /@media \(max-width: 1100px\) \{[\s\S]*?\.gallery-wrap \{[\s\S]*?overflow: hidden;[\s\S]*?\}[\s\S]*?\.gallery-track \{[\s\S]*?overflow: visible;[\s\S]*?width: max-content;[\s\S]*?\}/,
+  )
+  assert.doesNotMatch(
+    css,
+    /@media \(max-width: 1100px\) \{[\s\S]*?\.gallery-track \{[\s\S]*?overflow: hidden;[\s\S]*?width: 592px;[\s\S]*?\}/,
+  )
+})
