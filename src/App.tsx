@@ -111,6 +111,16 @@ type PeopleImageStyle = CSSProperties &
     string
   >
 
+type CarouselRotate = (direction: 'prev' | 'next') => void
+
+const handleCarouselGesture = (self: Observer, rotate: CarouselRotate) => {
+  if (Math.abs(self.deltaX) <= Math.abs(self.deltaY)) {
+    return
+  }
+
+  rotate(self.deltaX < 0 ? 'next' : 'prev')
+}
+
 const peopleImages = {
   alex: personAlex,
   mariana: personMariana,
@@ -552,18 +562,26 @@ function App() {
         },
       })
 
-      // Swipe affordance for the people carousel (touch + pointer).
+      // Swipe/trackpad affordance for the mobile carousels. Their arrows are
+      // hidden below 1100px, so gesture input is the primary mobile control.
       const peopleViewport = shell.querySelector('.people-viewport')
-      const observer = peopleViewport
+      const galleryViewport = shell.querySelector('.gallery-wrap')
+      const peopleObserver = peopleViewport
         ? Observer.create({
             target: peopleViewport,
-            type: 'touch,pointer',
+            type: 'touch,pointer,wheel',
             tolerance: 40,
-            // Commit to the dominant axis on gesture start so a vertical page
-            // scroll that drifts sideways doesn't spuriously rotate the carousel.
-            lockAxis: true,
-            onLeft: () => rotatePeople('next'),
-            onRight: () => rotatePeople('prev'),
+            wheelSpeed: -1,
+            onChange: (self) => handleCarouselGesture(self, rotatePeople),
+          })
+        : null
+      const galleryObserver = galleryViewport
+        ? Observer.create({
+            target: galleryViewport,
+            type: 'touch,pointer,wheel',
+            tolerance: 40,
+            wheelSpeed: -1,
+            onChange: (self) => handleCarouselGesture(self, rotateGallery),
           })
         : null
 
@@ -1034,7 +1052,8 @@ function App() {
         })
         window.removeEventListener('load', refresh)
         headerTrigger.kill()
-        observer?.kill()
+        peopleObserver?.kill()
+        galleryObserver?.kill()
         mm.revert()
       }
     },

@@ -796,6 +796,7 @@ select {
   left: 4px;
   overflow: visible;
   position: absolute;
+  touch-action: pan-y;
   top: 392px;
   width: 1377px;
 }
@@ -1397,6 +1398,7 @@ select {
   height: 616px;
   left: calc(var(--side) + 1px);
   position: absolute;
+  touch-action: pan-y;
   top: 189px;
   width: min(1381px, calc(100vw - var(--side) - 1px));
 }
@@ -2396,6 +2398,7 @@ select {
     height: 349px;
     left: auto;
     margin: 0;
+    overflow: hidden;
     position: static;
     top: auto;
     width: 100%;
@@ -2404,8 +2407,8 @@ select {
   .gallery-track {
     gap: 22px;
     height: 349px;
-    overflow: hidden;
-    width: 592px;
+    overflow: visible;
+    width: max-content;
   }
 
   .gallery-track img,
