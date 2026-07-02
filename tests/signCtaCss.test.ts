@@ -30,6 +30,26 @@ test('sign CTA buttons are stacked to match the Figma desktop rows', () => {
   assert.match(blockFor('.sign-actions'), /width: 400px;/)
 })
 
+test('sign CTA shows the community workspace image beside the copy on desktop', () => {
+  assert.match(app, /import signCtaImage from '\.\/assets\/figma\/sign-cta\.png'/)
+  assert.match(app, /<img alt="" className="sign-image" src=\{signCtaImage\} \/>/)
+
+  const image = blockFor('.sign-image')
+
+  assert.match(image, /border-radius: 8px;/)
+  assert.match(image, /height: 671px;/)
+  assert.match(image, /object-fit: cover;/)
+  assert.match(image, /position: absolute;/)
+  assert.match(image, /right: 0;/)
+  assert.match(image, /top: 49px;/)
+  assert.match(image, /width: 562px;/)
+
+  assert.match(
+    css,
+    /@media \(max-width: 1100px\) \{[\s\S]*?\.sign-image \{[\s\S]*?margin: 32px 0 0;[\s\S]*?position: static;[\s\S]*?width: 100%;[\s\S]*?\}/,
+  )
+})
+
 test('WhatsApp CTA uses the Figma outline button and icon asset', () => {
   assert.match(app, /import whatsappIcon from '\.\/assets\/figma\/vectors\/whatsapp\.svg'/)
   assert.match(app, /<img alt="" src=\{whatsappIcon\} \/>/)

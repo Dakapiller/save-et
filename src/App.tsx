@@ -2,15 +2,60 @@ import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 
 import heroImage from './assets/figma/hero-optimized.jpeg'
+import signCtaImage from './assets/figma/sign-cta.png'
 import galleryOne from './assets/figma/photo-08.jpeg'
 import galleryTwo from './assets/figma/photo-05.jpeg'
+import galleryCommunity01 from './assets/figma/gallery/gallery-01.jpg'
+import galleryCommunity02 from './assets/figma/gallery/gallery-02.jpg'
+import galleryCommunity03 from './assets/figma/gallery/gallery-03.jpg'
+import galleryCommunity04 from './assets/figma/gallery/gallery-04.jpg'
+import galleryCommunity05 from './assets/figma/gallery/gallery-05.jpg'
+import galleryCommunity06 from './assets/figma/gallery/gallery-06.jpg'
+import galleryCommunity07 from './assets/figma/gallery/gallery-07.jpg'
+import galleryCommunity08 from './assets/figma/gallery/gallery-08.jpg'
+import galleryCommunity09 from './assets/figma/gallery/gallery-09.jpg'
+import galleryCommunity10 from './assets/figma/gallery/gallery-10.jpg'
+import galleryCommunity11 from './assets/figma/gallery/gallery-11.jpg'
+import galleryCommunity12 from './assets/figma/gallery/gallery-12.jpg'
+import galleryCommunity13 from './assets/figma/gallery/gallery-13.jpg'
+import galleryCommunity14 from './assets/figma/gallery/gallery-14.jpg'
+import galleryCommunity15 from './assets/figma/gallery/gallery-15.jpg'
+import galleryCommunity16 from './assets/figma/gallery/gallery-16.jpg'
+import galleryCommunity17 from './assets/figma/gallery/gallery-17.jpg'
+import galleryCommunity18 from './assets/figma/gallery/gallery-18.jpg'
+import galleryCommunity19 from './assets/figma/gallery/gallery-19.jpg'
+import galleryCommunity20 from './assets/figma/gallery/gallery-20.jpg'
+import galleryCommunity21 from './assets/figma/gallery/gallery-21.jpg'
+import galleryCommunity22 from './assets/figma/gallery/gallery-22.jpg'
+import galleryCommunity23 from './assets/figma/gallery/gallery-23.jpg'
+import galleryCommunity24 from './assets/figma/gallery/gallery-24.jpg'
+import galleryCommunity25 from './assets/figma/gallery/gallery-25.jpg'
+import galleryCommunity26 from './assets/figma/gallery/gallery-26.jpg'
+import galleryCommunity27 from './assets/figma/gallery/gallery-27.jpg'
+import galleryCommunity28 from './assets/figma/gallery/gallery-28.jpg'
+import galleryCommunity29 from './assets/figma/gallery/gallery-29.jpg'
+import galleryCommunity30 from './assets/figma/gallery/gallery-30.jpg'
 import galleryArrowNext from './assets/figma/vectors/gallery-arrow-next.svg'
 import galleryArrowPrev from './assets/figma/vectors/gallery-arrow-prev.svg'
-import personAna from './assets/figma/photo-11.jpeg'
-import personManuel from './assets/figma/photo-07.jpeg'
-import personMariana from './assets/figma/photo-09.jpeg'
-import personNome from './assets/figma/photo-13.jpeg'
-import personRicardo from './assets/figma/photo-02.jpeg'
+import personAlex from './assets/figma/people/alex.jpg'
+import personCatia from './assets/figma/people/catia.jpg'
+import personDiogo from './assets/figma/people/diogo.jpg'
+import personFernando from './assets/figma/people/fernando.jpg'
+import personGuilherme from './assets/figma/people/guilherme.jpg'
+import personHellen from './assets/figma/people/hellen.jpg'
+import personInesConsultora from './assets/figma/people/ines-consultora.jpg'
+import personInesDesigner from './assets/figma/people/ines-designer.jpg'
+import personJane from './assets/figma/people/jane.jpg'
+import personJoana from './assets/figma/people/joana.jpg'
+import personJoseMaria from './assets/figma/people/jose-maria.jpg'
+import personManuel from './assets/figma/people/manuel.jpg'
+import personMariana from './assets/figma/people/mariana.jpg'
+import personMarlon from './assets/figma/people/marlon.jpg'
+import personPatricia from './assets/figma/people/patricia.jpg'
+import personRaquel from './assets/figma/people/raquel.jpg'
+import personRebecca from './assets/figma/people/rebecca.jpg'
+import personRicardo from './assets/figma/people/ricardo.jpg'
+import personVanessa from './assets/figma/people/vanessa.jpg'
 import arrowNext from './assets/figma/vectors/arrow-next.svg'
 import arrowPrev from './assets/figma/vectors/arrow-prev.svg'
 import campaignArrow from './assets/figma/vectors/campaign-arrow.svg'
@@ -39,7 +84,7 @@ import statPeople from './assets/figma/vectors/stat-people.svg'
 import statRestaurant from './assets/figma/vectors/stat-restaurant.svg'
 import whatsappIcon from './assets/figma/vectors/whatsapp.svg'
 import xIcon from './assets/figma/vectors/x.svg'
-import { content, type LanguageCode, languages } from './content'
+import { content, type LanguageCode, languages, type PersonId } from './content'
 import {
   countUpTween,
   dur,
@@ -66,21 +111,29 @@ type PeopleImageStyle = CSSProperties &
     string
   >
 
-const peopleImages = [
-  personMariana,
-  personRicardo,
-  personNome,
-  personManuel,
-  personAna,
-] as const
+const peopleImages = {
+  alex: personAlex,
+  mariana: personMariana,
+  ricardo: personRicardo,
+  fernando: personFernando,
+  raquel: personRaquel,
+  manuel: personManuel,
+  diogo: personDiogo,
+  'ines-consultora': personInesConsultora,
+  catia: personCatia,
+  marlon: personMarlon,
+  patricia: personPatricia,
+  guilherme: personGuilherme,
+  'ines-designer': personInesDesigner,
+  joana: personJoana,
+  jane: personJane,
+  vanessa: personVanessa,
+  'jose-maria': personJoseMaria,
+  rebecca: personRebecca,
+  hellen: personHellen,
+} satisfies Record<PersonId, string>
 
-const peopleImageLayouts = [
-  { left: -32.816, top: -65.632, width: 270.994, height: 406.292 },
-  { left: -3.128, top: -49.128, width: 254, height: 380 },
-  { left: -0.128, top: -71.128, width: 260, height: 390 },
-  { left: -2.128, top: -46.128, width: 250, height: 376 },
-  { left: -32.816, top: -65.632, width: 270.994, height: 406.292 },
-] as const
+const peopleImageLayout = { left: 0, top: 0, width: 237.916, height: 281.28 } as const
 
 const statIcons = [statPeople, statBuilding, statRestaurant, statCalendar] as const
 const ecosystemConnectors = [
@@ -89,7 +142,40 @@ const ecosystemConnectors = [
   { className: 'orbit-link-bl', src: ecoConnectorSmall },
   { className: 'orbit-link-br', src: ecoConnectorBottomRight },
 ] as const
-const galleryImages = [galleryOne, galleryTwo] as const
+const galleryCommunityImages = [
+  galleryCommunity01,
+  galleryCommunity02,
+  galleryCommunity03,
+  galleryCommunity04,
+  galleryCommunity05,
+  galleryCommunity06,
+  galleryCommunity07,
+  galleryCommunity08,
+  galleryCommunity09,
+  galleryCommunity10,
+  galleryCommunity11,
+  galleryCommunity12,
+  galleryCommunity13,
+  galleryCommunity14,
+  galleryCommunity15,
+  galleryCommunity16,
+  galleryCommunity17,
+  galleryCommunity18,
+  galleryCommunity19,
+  galleryCommunity20,
+  galleryCommunity21,
+  galleryCommunity22,
+  galleryCommunity23,
+  galleryCommunity24,
+  galleryCommunity25,
+  galleryCommunity26,
+  galleryCommunity27,
+  galleryCommunity28,
+  galleryCommunity29,
+  galleryCommunity30,
+] as const
+const galleryImages = [galleryOne, galleryTwo, ...galleryCommunityImages] as const
+const galleryTrackImages = [...galleryImages, galleryImages[0], galleryImages[1]] as const
 
 function EcosystemIcon({ index }: { index: number }) {
   if (index === 0) {
@@ -347,7 +433,6 @@ function App() {
   const [peopleIndex, setPeopleIndex] = useState(0)
   const [galleryIndex, setGalleryIndex] = useState(0)
   const shellRef = useRef<HTMLDivElement>(null)
-  const galleryReady = useRef(false)
   const pendingScrollRef = useRef<string | null>(null)
   // True while the burger menu is open. The scroll lock momentarily reports
   // scrollY as 0, which would otherwise flip the sticky header's condensed state
@@ -563,7 +648,7 @@ function App() {
         })
 
         // ---- Sign / CTA ----
-        gsap.from('.sign-title, .sign-layout > p, .sign-actions', {
+        gsap.from('.sign-title, .sign-layout > p, .sign-actions, .sign-image', {
           y: 36,
           autoAlpha: 0,
           duration: dur.medium,
@@ -986,21 +1071,30 @@ function App() {
     { scope: shellRef, dependencies: [peopleIndex] },
   )
 
-  // Gallery — crossfade + scale-settle on swap instead of the old hard cut.
+  // Gallery carousel uses the same measured slide pattern as people: the
+  // image step is breakpoint-dependent, so read it from the rendered track.
   useGSAP(
     () => {
-      if (!galleryReady.current) {
-        galleryReady.current = true
+      const track = shellRef.current?.querySelector<HTMLElement>('.gallery-track')
+      const first = track?.children[0] as HTMLElement | undefined
+      if (!track || !first) {
         return
       }
-      if (prefersReduced()) {
-        return
+
+      const offsetOf = () => {
+        const target = track.children[galleryIndex] as HTMLElement | undefined
+        return target ? target.offsetLeft - first.offsetLeft : 0
       }
-      gsap.fromTo(
-        '.gallery-track img',
-        { autoAlpha: 0.3, scale: 1.04 },
-        { autoAlpha: 1, scale: 1, duration: dur.medium, stagger: 0.06, ease: 'power2.out', clearProps: 'transform' },
-      )
+
+      gsap.to(track, {
+        x: -offsetOf(),
+        duration: prefersReduced() ? 0 : 0.6,
+        ease: ease.glide,
+      })
+
+      const onResize = () => gsap.set(track, { x: -offsetOf() })
+      window.addEventListener('resize', onResize)
+      return () => window.removeEventListener('resize', onResize)
     },
     { scope: shellRef, dependencies: [galleryIndex] },
   )
@@ -1135,7 +1229,7 @@ function App() {
             </h2>
             <div className="people-viewport">
               <div className="people-track">
-                {copy.people.map((person, index) => (
+                {copy.people.map((person) => (
                   <article className="person-card" key={`${person.name}-${person.role}`}>
                     <div className="portrait-frame">
                       <img alt="" aria-hidden="true" className="portrait-frame-lines" src={personCardFrame} />
@@ -1143,13 +1237,13 @@ function App() {
                         <img
                           alt=""
                           className="portrait-image"
-                          src={peopleImages[index]}
+                          src={peopleImages[person.id]}
                           style={
                             {
-                              '--portrait-image-height': `${peopleImageLayouts[index].height}px`,
-                              '--portrait-image-left': `${peopleImageLayouts[index].left}px`,
-                              '--portrait-image-top': `${peopleImageLayouts[index].top}px`,
-                              '--portrait-image-width': `${peopleImageLayouts[index].width}px`,
+                              '--portrait-image-height': `${peopleImageLayout.height}px`,
+                              '--portrait-image-left': `${peopleImageLayout.left}px`,
+                              '--portrait-image-top': `${peopleImageLayout.top}px`,
+                              '--portrait-image-width': `${peopleImageLayout.width}px`,
                             } as PeopleImageStyle
                           }
                         />
@@ -1164,7 +1258,12 @@ function App() {
                   </article>
                 ))}
               </div>
-              <div aria-hidden="true" className="people-fade people-fade--left" />
+              <div
+                aria-hidden="true"
+                className={
+                  peopleIndex > 0 ? 'people-fade people-fade--left' : 'people-fade people-fade--left people-fade--hidden'
+                }
+              />
               <div aria-hidden="true" className="people-fade" />
               <ArrowButton
                 className="people-prev"
@@ -1267,9 +1366,16 @@ function App() {
         <section className="gallery-section" aria-label="Community gallery">
           <div className="gallery-wrap">
             <div className="gallery-track">
-              <img alt="" src={galleryImages[galleryIndex]} />
-              <img alt="" src={galleryImages[(galleryIndex + 1) % galleryImages.length]} />
+              {galleryTrackImages.map((image, index) => (
+                <img alt="" decoding="async" key={`${image}-${index}`} loading="lazy" src={image} />
+              ))}
             </div>
+            <div
+              aria-hidden="true"
+              className={
+                galleryIndex > 0 ? 'gallery-fade gallery-fade--left' : 'gallery-fade gallery-fade--left gallery-fade--hidden'
+              }
+            />
             <div className="gallery-fade" />
             <ArrowButton
               className="gallery-prev"
@@ -1304,6 +1410,7 @@ function App() {
                 <img alt="" src={whatsappIcon} />
               </a>
             </div>
+            <img alt="" className="sign-image" src={signCtaImage} />
           </div>
         </section>
       </main>

@@ -76,14 +76,41 @@ test('people carousel uses the same right fade treatment as the photo slider', (
 
   const block = blockFor('.people-fade')
 
-  assert.match(block, /background: linear-gradient\(90deg, rgba\(255, 255, 255, 0\), #ffffff 74%\);/)
+  assert.match(block, /background: linear-gradient\(90deg, rgba\(255, 255, 255, 0\), #ffffff 137px, #ffffff\);/)
   assert.match(block, /height: 720px;/)
   assert.match(block, /pointer-events: none;/)
   assert.match(block, /position: absolute;/)
-  assert.match(block, /right: 0;/)
+  assert.match(block, /right: calc\(-1 \* var\(--side\)\);/)
   assert.match(block, /top: -121px;/)
-  assert.match(block, /width: 185px;/)
+  assert.match(block, /width: calc\(var\(--side\) \+ 185px\);/)
   assert.match(block, /z-index: 3;/)
+})
+
+test('people carousel left fade is hidden at the starting card', () => {
+  assert.match(app, /peopleIndex > 0 \? 'people-fade people-fade--left' : 'people-fade people-fade--left people-fade--hidden'/)
+
+  const block = blockFor('.people-fade--hidden')
+
+  assert.match(block, /opacity: 0;/)
+  assert.match(block, /visibility: hidden;/)
+})
+
+test('people carousel left fade mirrors the right mask overlap', () => {
+  const block = blockFor('.people-fade--left')
+
+  assert.match(block, /background: linear-gradient\(90deg, #ffffff, #ffffff calc\(100% - 137px\), rgba\(255, 255, 255, 0\)\);/)
+  assert.match(block, /left: calc\(-1 \* var\(--side\) - 4px\);/)
+  assert.match(block, /width: calc\(var\(--side\) \+ 4px\);/)
+})
+
+test('person role labels clamp before colliding with since labels', () => {
+  const block = blockFor('.person-meta span:first-of-type')
+
+  assert.match(block, /display: -webkit-box;/)
+  assert.match(block, /overflow: hidden;/)
+  assert.match(block, /-webkit-line-clamp: 2;/)
+  assert.match(block, /-webkit-box-orient: vertical;/)
+  assert.match(block, /width: 132px;/)
 })
 
 test('people carousel expands the full card run and moves next arrow beside it on 4k viewports', () => {

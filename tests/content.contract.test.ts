@@ -43,6 +43,151 @@ test('people heading preserves Figma color emphasis segments', () => {
   ])
 })
 
+test('people testimonials match the portrait list source', () => {
+  const expectedPortuguesePeople = [
+    {
+      id: 'alex',
+      name: 'Alex',
+      role: 'Sales Manager',
+      since: 'Aqui desde 2026',
+      quote: 'Aqui nasceram amizades para a vida.',
+    },
+    {
+      id: 'mariana',
+      name: 'Mariana',
+      role: 'Consultora',
+      since: 'Aqui desde 2023',
+      quote: 'Aqui encontrei a minha comunidade.',
+    },
+    {
+      id: 'ricardo',
+      name: 'Ricardo',
+      role: 'CEO',
+      since: 'Aqui desde 2022',
+      quote: 'Aqui encontrei a minha vibe profissional.',
+    },
+    {
+      id: 'fernando',
+      name: 'Fernando',
+      role: 'Estratega de Transformacao Digital, Fundador',
+      since: 'Aqui desde 2022',
+      quote: 'Aqui o meu horizonte tornou-se mais horizontal.',
+    },
+    {
+      id: 'raquel',
+      name: 'Raquel',
+      role: 'Fundadora',
+      since: 'Aqui desde 2025',
+      quote: 'Aqui cresci, pessoal e profissionalmente.',
+    },
+    {
+      id: 'manuel',
+      name: 'Manuel',
+      role: 'Porteiro',
+      since: 'Aqui desde',
+      quote: '...',
+    },
+    {
+      id: 'diogo',
+      name: 'Diogo',
+      role: 'Marketing',
+      since: 'Aqui desde 2014',
+      quote: 'Este lugar abriu-me novas oportunidades.',
+    },
+    {
+      id: 'ines-consultora',
+      name: 'Inês',
+      role: 'Consultora',
+      since: 'Aqui desde 2021',
+      quote: 'Este lugar deu-me novas perspectivas.',
+    },
+    {
+      id: 'catia',
+      name: 'Cátia',
+      role: 'Marketing',
+      since: 'Aqui desde 2025',
+      quote: 'Este espaço faz-me sentir parte de algo.',
+    },
+    {
+      id: 'marlon',
+      name: 'Marlon',
+      role: 'Vidéografo',
+      since: 'Aqui desde 2025',
+      quote: 'Este espaço ligou-me a pessoas incríveis.',
+    },
+    {
+      id: 'patricia',
+      name: 'Patrícia',
+      role: 'People Partner',
+      since: 'Aqui desde 2026',
+      quote: 'Este lugar trouxe mais cor ao meu dia a dia.',
+    },
+    {
+      id: 'guilherme',
+      name: 'Guilherme',
+      role: 'Developer',
+      since: 'Aqui desde 2026',
+      quote: 'Este espaço tornou o Porto mais meu.',
+    },
+    {
+      id: 'ines-designer',
+      name: 'Inês',
+      role: 'Graphic Designer',
+      since: 'Aqui desde 2026',
+      quote: 'Aqui conheci pessoas que me inspiram.',
+    },
+    {
+      id: 'joana',
+      name: 'Joana',
+      role: 'People and Culture',
+      since: 'Aqui desde 2023',
+      quote: 'Este lugar mostrou-me o valor da comunidade.',
+    },
+    {
+      id: 'jane',
+      name: 'Jane',
+      role: 'Sales Development Rep',
+      since: 'Aqui desde 2026',
+      quote: 'Aqui construí relações que importam.',
+    },
+    {
+      id: 'vanessa',
+      name: 'Vanessa',
+      role: 'Space Manager',
+      since: 'Aqui desde 2024',
+      quote: 'Aqui encontrei mais do que um local de trabalho.',
+    },
+    {
+      id: 'jose-maria',
+      name: 'José Maria',
+      role: 'Designer',
+      since: 'Aqui desde 2024',
+      quote: 'Aqui encontrei energia para criar e crescer.',
+    },
+    {
+      id: 'rebecca',
+      name: 'Rebecca',
+      role: 'Arquiteta',
+      since: 'Aqui desde 2023',
+      quote: 'Este lugar mudou a minha vida.',
+    },
+    {
+      id: 'hellen',
+      name: 'Hellen',
+      role: 'Talent Manager',
+      since: 'Aqui desde 2024',
+      quote: 'Aqui criaram-se laços que continuam fora daqui.',
+    },
+  ]
+
+  assert.deepEqual(content.pt.people, expectedPortuguesePeople)
+  assert.deepEqual(
+    content.en.people.map((person) => person.name),
+    expectedPortuguesePeople.map((person) => person.name),
+  )
+  assert.doesNotMatch(content.pt.people.map((person) => person.name).join(' '), /\?/)
+})
+
 test('desktop menu content matches the Figma menu structure', () => {
   assert.deepEqual(content.pt.nav.menuItems.map((item) => item.label), [
     'Introdução',
