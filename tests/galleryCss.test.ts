@@ -21,10 +21,52 @@ test('gallery wrapper and arrows use desktop side placement', () => {
     blockFor('.gallery-wrap'),
     /width: min\(1381px, calc\(100vw - var\(--side\) - 1px\)\);/,
   )
+  assert.match(blockFor('.gallery-track'), /overflow: visible;/)
+  assert.match(blockFor('.gallery-track'), /will-change: transform;/)
   assert.match(blockFor('.gallery-prev'), /left: -84px;/)
   assert.match(blockFor('.gallery-prev'), /top: 225px;/)
-  assert.match(blockFor('.gallery-next'), /right: 16px;/)
+  assert.match(blockFor('.gallery-next'), /right: 66px;/)
   assert.match(blockFor('.gallery-next'), /top: 225px;/)
+})
+
+test('gallery carousel uses the same measured slide pattern as people carousel', () => {
+  assert.equal(
+    app.match(/import galleryCommunity\d+ from '\.\/assets\/figma\/gallery\/gallery-\d+\.jpg'/g)?.length,
+    30,
+  )
+  assert.match(app, /const galleryImages = \[galleryOne, galleryTwo, \.\.\.galleryCommunityImages\] as const/)
+  assert.match(app, /const galleryTrackImages = \[\.\.\.galleryImages, galleryImages\[0\], galleryImages\[1\]\] as const/)
+  assert.match(app, /galleryTrackImages\.map\(\(image, index\) => \(/)
+  assert.match(app, /querySelector<HTMLElement>\('\.gallery-track'\)/)
+  assert.match(app, /const target = track\.children\[galleryIndex\] as HTMLElement \| undefined/)
+  assert.match(app, /x: -offsetOf\(\)/)
+  assert.match(app, /loading="lazy"/)
+  assert.match(app, /decoding="async"/)
+})
+
+test('gallery carousel masks both sides with the same overlap treatment', () => {
+  assert.match(
+    app,
+    /galleryIndex > 0 \? 'gallery-fade gallery-fade--left' : 'gallery-fade gallery-fade--left gallery-fade--hidden'/,
+  )
+
+  const rightFade = blockFor('.gallery-fade')
+  const leftFade = blockFor('.gallery-fade--left')
+  const hiddenFade = blockFor('.gallery-fade--hidden')
+
+  assert.match(rightFade, /background: linear-gradient\(90deg, rgba\(255, 255, 255, 0\), #ffffff 137px, #ffffff\);/)
+  assert.match(rightFade, /pointer-events: none;/)
+  assert.match(rightFade, /right: calc\(-1 \* var\(--side\)\);/)
+  assert.match(rightFade, /width: calc\(var\(--side\) \+ 185px\);/)
+  assert.match(rightFade, /z-index: 3;/)
+
+  assert.match(leftFade, /background: linear-gradient\(90deg, #ffffff, #ffffff calc\(100% - 137px\), rgba\(255, 255, 255, 0\)\);/)
+  assert.match(leftFade, /left: calc\(-1 \* var\(--side\) - 1px\);/)
+  assert.match(leftFade, /right: auto;/)
+  assert.match(leftFade, /width: calc\(var\(--side\) \+ 1px\);/)
+
+  assert.match(hiddenFade, /opacity: 0;/)
+  assert.match(hiddenFade, /visibility: hidden;/)
 })
 
 test('gallery arrows use gallery-specific Figma assets', () => {
@@ -46,6 +88,6 @@ test('gallery hides the arrows in the mobile/tablet range (swipe-only)', () => {
   // swipe-driven and the prev/next arrows are hidden.
   assert.match(
     css,
-    /@media \(max-width: 1100px\) \{[\s\S]*?\.gallery-fade,\n {2}\.gallery-prev,\n {2}\.gallery-next \{[\s\S]*?display: none;[\s\S]*?\}/,
+    /@media \(max-width: 1100px\) \{[\s\S]*?\.gallery-fade,\n {2}\.gallery-fade--left,\n {2}\.gallery-prev,\n {2}\.gallery-next \{[\s\S]*?display: none;[\s\S]*?\}/,
   )
 })

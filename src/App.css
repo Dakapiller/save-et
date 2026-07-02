@@ -1405,31 +1405,47 @@ select {
   display: flex;
   gap: 22px;
   height: 513px;
-  overflow: hidden;
-  width: 1381px;
+  overflow: visible;
+  width: max-content;
+  will-change: transform;
 }
 
 .gallery-track img {
   display: block;
+  flex: 0 0 auto;
   height: 513px;
   object-fit: cover;
 }
 
-.gallery-track img:first-child {
+.gallery-track img:nth-child(odd) {
   width: 715px;
 }
 
-.gallery-track img:nth-child(2) {
+.gallery-track img:nth-child(even) {
   width: 644px;
 }
 
 .gallery-fade {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 74%);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 137px, #ffffff);
   height: 616px;
+  pointer-events: none;
   position: absolute;
-  right: 0;
+  right: calc(-1 * var(--side));
   top: -50px;
-  width: 185px;
+  width: calc(var(--side) + 185px);
+  z-index: 3;
+}
+
+.gallery-fade--left {
+  background: linear-gradient(90deg, #ffffff, #ffffff calc(100% - 137px), rgba(255, 255, 255, 0));
+  left: calc(-1 * var(--side) - 1px);
+  right: auto;
+  width: calc(var(--side) + 1px);
+}
+
+.gallery-fade--hidden {
+  opacity: 0;
+  visibility: hidden;
 }
 
 .gallery-prev {
@@ -1438,7 +1454,7 @@ select {
 }
 
 .gallery-next {
-  right: 16px;
+  right: 66px;
   top: 225px;
 }
 
@@ -1478,6 +1494,17 @@ select {
   position: absolute;
   top: 544px;
   width: 400px;
+}
+
+.sign-image {
+  border-radius: 8px;
+  display: block;
+  height: 671px;
+  object-fit: cover;
+  position: absolute;
+  right: 0;
+  top: 49px;
+  width: 562px;
 }
 
 .site-footer {
@@ -2382,22 +2409,23 @@ select {
   }
 
   .gallery-track img,
-  .gallery-track img:first-child,
-  .gallery-track img:nth-child(2) {
+  .gallery-track img:nth-child(odd),
+  .gallery-track img:nth-child(even) {
     border-radius: 10px;
     height: 349px;
     object-fit: cover;
   }
 
-  .gallery-track img:first-child {
+  .gallery-track img:nth-child(odd) {
     width: 284px;
   }
 
-  .gallery-track img:nth-child(2) {
+  .gallery-track img:nth-child(even) {
     width: 286px;
   }
 
   .gallery-fade,
+  .gallery-fade--left,
   .gallery-prev,
   .gallery-next {
     display: none;
@@ -2437,6 +2465,13 @@ select {
     margin: 32px 0 0;
     position: static;
     top: auto;
+    width: 100%;
+  }
+
+  .sign-image {
+    height: auto;
+    margin: 32px 0 0;
+    position: static;
     width: 100%;
   }
 
