@@ -17,6 +17,7 @@ function blockFor(selector: string) {
 
 test('sign CTA buttons are stacked to match the Figma desktop rows', () => {
   assert.match(app, /<div className="sign-actions">[\s\S]*campaign-button--whatsapp/)
+  assert.match(blockFor('.sign-section'), /background: linear-gradient\(180deg, #ffffff 0%, var\(--sky\) 28%, var\(--sky\) 100%\);/)
   assert.match(blockFor('.sign-layout'), /position: relative;/)
   assert.match(blockFor('.sign-title'), /position: absolute;/)
   assert.match(blockFor('.sign-title'), /top: 174px;/)

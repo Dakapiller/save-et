@@ -16,6 +16,7 @@ function blockFor(selector: string) {
 }
 
 test('gallery wrapper and arrows use desktop side placement', () => {
+  assert.match(blockFor('.gallery-section'), /background: #ffffff;/)
   assert.match(blockFor('.gallery-wrap'), /left: calc\(var\(--side\) \+ 1px\);/)
   assert.match(
     blockFor('.gallery-wrap'),
@@ -55,8 +56,10 @@ test('gallery carousel masks both sides with the same overlap treatment', () => 
   const hiddenFade = blockFor('.gallery-fade--hidden')
 
   assert.match(rightFade, /background: linear-gradient\(90deg, rgba\(255, 255, 255, 0\), #ffffff 137px, #ffffff\);/)
+  assert.match(rightFade, /height: 513px;/)
   assert.match(rightFade, /pointer-events: none;/)
   assert.match(rightFade, /right: calc\(-1 \* var\(--side\)\);/)
+  assert.match(rightFade, /top: 0;/)
   assert.match(rightFade, /width: calc\(var\(--side\) \+ 185px\);/)
   assert.match(rightFade, /z-index: 3;/)
 
