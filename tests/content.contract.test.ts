@@ -25,6 +25,13 @@ test('campaign content covers the visible Figma sections', () => {
   }
 })
 
+test('localized content does not ship placeholder text', () => {
+  const textValues = JSON.stringify(content)
+
+  assert.doesNotMatch(textValues, /\.\.\./)
+  assert.doesNotMatch(textValues, /\b(?:TODO|TBD|placeholder|lorem ipsum)\b/i)
+})
+
 test('people heading preserves Figma color emphasis segments', () => {
   assert.deepEqual(content.pt.peopleSection.titleParts, [
     { text: 'Pessoas', emphasis: true },
@@ -85,7 +92,7 @@ test('people testimonials match the portrait list source', () => {
       name: 'Manuel',
       role: 'Porteiro',
       since: 'Aqui desde',
-      quote: '...',
+      quote: 'Aqui encontrei o meu lugar.',
     },
     {
       id: 'diogo',
