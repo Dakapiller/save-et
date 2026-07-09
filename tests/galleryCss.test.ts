@@ -35,9 +35,13 @@ test('gallery wrapper and arrows use desktop side placement', () => {
 test('gallery carousel uses the same measured slide pattern as people carousel', () => {
   assert.equal(
     app.match(/import galleryCommunity\d+ from '\.\/assets\/figma\/gallery\/gallery-\d+\.jpg'/g)?.length,
-    30,
+    19,
   )
-  assert.match(app, /const galleryImages = \[galleryOne, galleryTwo, \.\.\.galleryCommunityImages\] as const/)
+  assert.match(
+    app,
+    /const galleryCommunityImages = \[\n  galleryCommunity13,\n  galleryCommunity04,\n  galleryCommunity20,\n  galleryCommunity01,\n  galleryCommunity17,\n  galleryCommunity18,\n  galleryCommunity24,\n  galleryCommunity06,\n  galleryCommunity26,\n  galleryCommunity09,\n  galleryCommunity14,\n  galleryCommunity23,\n  galleryCommunity08,\n  galleryCommunity10,\n  galleryCommunity27,\n  galleryCommunity11,\n  galleryCommunity25,\n  galleryCommunity16,\n  galleryCommunity22,\n\] as const/,
+  )
+  assert.match(app, /const galleryImages = galleryCommunityImages/)
   assert.match(app, /const galleryTrackImages = \[\.\.\.galleryImages, galleryImages\[0\], galleryImages\[1\]\] as const/)
   assert.match(app, /galleryTrackImages\.map\(\(image, index\) => \(/)
   assert.match(app, /querySelector<HTMLElement>\('\.gallery-track'\)/)

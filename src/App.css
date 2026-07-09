@@ -2525,7 +2525,7 @@ select {
   .site-footer address {
     gap: 30px;
     left: auto;
-    margin: 36px 0 0;
+    margin: 36px 0 64px;
     position: static;
     top: auto;
     width: 100%;

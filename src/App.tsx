@@ -2,39 +2,26 @@ import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 
 import heroImage from './assets/figma/hero-optimized.jpeg'
-import signCtaImage from './assets/figma/sign-cta.png'
-import galleryOne from './assets/figma/photo-08.jpeg'
-import galleryTwo from './assets/figma/photo-05.jpeg'
+import signCtaImage from './assets/figma/gallery/gallery-15.jpg'
 import galleryCommunity01 from './assets/figma/gallery/gallery-01.jpg'
-import galleryCommunity02 from './assets/figma/gallery/gallery-02.jpg'
-import galleryCommunity03 from './assets/figma/gallery/gallery-03.jpg'
 import galleryCommunity04 from './assets/figma/gallery/gallery-04.jpg'
-import galleryCommunity05 from './assets/figma/gallery/gallery-05.jpg'
 import galleryCommunity06 from './assets/figma/gallery/gallery-06.jpg'
-import galleryCommunity07 from './assets/figma/gallery/gallery-07.jpg'
 import galleryCommunity08 from './assets/figma/gallery/gallery-08.jpg'
 import galleryCommunity09 from './assets/figma/gallery/gallery-09.jpg'
 import galleryCommunity10 from './assets/figma/gallery/gallery-10.jpg'
 import galleryCommunity11 from './assets/figma/gallery/gallery-11.jpg'
-import galleryCommunity12 from './assets/figma/gallery/gallery-12.jpg'
 import galleryCommunity13 from './assets/figma/gallery/gallery-13.jpg'
 import galleryCommunity14 from './assets/figma/gallery/gallery-14.jpg'
-import galleryCommunity15 from './assets/figma/gallery/gallery-15.jpg'
 import galleryCommunity16 from './assets/figma/gallery/gallery-16.jpg'
 import galleryCommunity17 from './assets/figma/gallery/gallery-17.jpg'
 import galleryCommunity18 from './assets/figma/gallery/gallery-18.jpg'
-import galleryCommunity19 from './assets/figma/gallery/gallery-19.jpg'
 import galleryCommunity20 from './assets/figma/gallery/gallery-20.jpg'
-import galleryCommunity21 from './assets/figma/gallery/gallery-21.jpg'
 import galleryCommunity22 from './assets/figma/gallery/gallery-22.jpg'
 import galleryCommunity23 from './assets/figma/gallery/gallery-23.jpg'
 import galleryCommunity24 from './assets/figma/gallery/gallery-24.jpg'
 import galleryCommunity25 from './assets/figma/gallery/gallery-25.jpg'
 import galleryCommunity26 from './assets/figma/gallery/gallery-26.jpg'
 import galleryCommunity27 from './assets/figma/gallery/gallery-27.jpg'
-import galleryCommunity28 from './assets/figma/gallery/gallery-28.jpg'
-import galleryCommunity29 from './assets/figma/gallery/gallery-29.jpg'
-import galleryCommunity30 from './assets/figma/gallery/gallery-30.jpg'
 import galleryArrowNext from './assets/figma/vectors/gallery-arrow-next.svg'
 import galleryArrowPrev from './assets/figma/vectors/gallery-arrow-prev.svg'
 import personAlex from './assets/figma/people/alex.jpg'
@@ -100,6 +87,8 @@ import {
 import { lockDocumentScroll, restoreDocumentScroll } from './scrollLock'
 import { timelineMilestones, timelineSegments, toTimelinePercent } from './timelineLayout'
 
+const PETITION_URL = 'https://peticaopublica.com/pview.aspx?pi=PT131237'
+
 type TimelineMilestoneStyle = CSSProperties &
   Record<'--timeline-dot-left' | '--timeline-text-left' | '--timeline-text-width', string>
 
@@ -156,38 +145,27 @@ const ecosystemConnectors = [
   { className: 'orbit-link-br', src: ecoConnectorBottomRight },
 ] as const
 const galleryCommunityImages = [
-  galleryCommunity01,
-  galleryCommunity02,
-  galleryCommunity03,
-  galleryCommunity04,
-  galleryCommunity05,
-  galleryCommunity06,
-  galleryCommunity07,
-  galleryCommunity08,
-  galleryCommunity09,
-  galleryCommunity10,
-  galleryCommunity11,
-  galleryCommunity12,
   galleryCommunity13,
-  galleryCommunity14,
-  galleryCommunity15,
-  galleryCommunity16,
+  galleryCommunity04,
+  galleryCommunity20,
+  galleryCommunity01,
   galleryCommunity17,
   galleryCommunity18,
-  galleryCommunity19,
-  galleryCommunity20,
-  galleryCommunity21,
-  galleryCommunity22,
-  galleryCommunity23,
   galleryCommunity24,
-  galleryCommunity25,
+  galleryCommunity06,
   galleryCommunity26,
+  galleryCommunity09,
+  galleryCommunity14,
+  galleryCommunity23,
+  galleryCommunity08,
+  galleryCommunity10,
   galleryCommunity27,
-  galleryCommunity28,
-  galleryCommunity29,
-  galleryCommunity30,
+  galleryCommunity11,
+  galleryCommunity25,
+  galleryCommunity16,
+  galleryCommunity22,
 ] as const
-const galleryImages = [galleryOne, galleryTwo, ...galleryCommunityImages] as const
+const galleryImages = galleryCommunityImages
 const galleryTrackImages = [...galleryImages, galleryImages[0], galleryImages[1]] as const
 
 function EcosystemIcon({ index }: { index: number }) {
@@ -431,7 +409,7 @@ function DesktopMenuOverlay({
             </div>
           ))}
         </nav>
-        <CampaignButton href="#sign" onClick={() => handleNavigate('#sign')}>
+        <CampaignButton href={PETITION_URL}>
           {copy.nav.petition}
         </CampaignButton>
       </div>
@@ -1096,7 +1074,7 @@ function App() {
                 <span> {copy.hero.titleEnd}</span>
               </h1>
               <p>{copy.hero.body}</p>
-              <CampaignButton href="#sign">{copy.hero.cta}</CampaignButton>
+              <CampaignButton href={PETITION_URL}>{copy.hero.cta}</CampaignButton>
             </div>
             <img alt="" className="hero-image" src={heroImage} />
           </div>
@@ -1228,7 +1206,7 @@ function App() {
                 onClick={() => rotatePeople('next')}
               />
             </div>
-            <CampaignButton href="#sign">{copy.peopleSection.cta}</CampaignButton>
+            <CampaignButton href={PETITION_URL}>{copy.peopleSection.cta}</CampaignButton>
             <p className="helper-copy">{copy.peopleSection.helper}</p>
           </div>
         </section>
@@ -1352,7 +1330,7 @@ function App() {
             </h2>
             <p>{copy.cta.body}</p>
             <div className="sign-actions">
-              <CampaignButton href="https://www.transparentevivo.pt/" variant="primary">
+              <CampaignButton href={PETITION_URL} variant="primary">
                 {copy.cta.primary}
               </CampaignButton>
               <a className="campaign-button campaign-button--whatsapp" href={shareUrl}>

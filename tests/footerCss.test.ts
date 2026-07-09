@@ -56,6 +56,13 @@ test('footer mark sits 110px after the social links on desktop', () => {
   assert.match(footerMark, /height: 448px;/)
 })
 
+test('mobile footer keeps padding between social links and the large logo mark', () => {
+  assert.match(
+    css,
+    /@media \(max-width: 1100px\) \{[\s\S]*?\.site-footer address \{[\s\S]*?margin: 36px 0 64px;[\s\S]*?\}[\s\S]*?\.footer-mark \{/,
+  )
+})
+
 test('footer contact labels and values use the Figma colors and type', () => {
   assert.match(blockFor('.site-footer address'), /margin-right: 0;/)
 
