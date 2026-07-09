@@ -29,6 +29,7 @@ test('desktop hero image reaches the viewport right edge from inside the wrapper
   const heroImage = blockFor('.hero-image')
 
   assert.match(heroImage, /position: absolute;/)
+  assert.match(heroImage, /object-position: center 70%;/)
   assert.match(heroImage, /right: calc\(-1 \* var\(--side\) - 31px\);/)
   assert.match(heroImage, /width: 741px;/)
 })
@@ -44,6 +45,7 @@ test('mobile hero image has rounded corners', () => {
   const heroImage = blockForIn(mobileCss, '.hero-image')
 
   assert.match(heroImage, /border-radius: 10px;/)
+  assert.match(heroImage, /object-position: center 70%;/)
 })
 
 test('mobile hero CTA appears directly after the title before the body copy', () => {

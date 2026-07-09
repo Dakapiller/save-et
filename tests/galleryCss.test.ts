@@ -26,6 +26,7 @@ test('gallery wrapper and arrows use desktop side placement', () => {
   assert.match(blockFor('.gallery-track'), /overflow: visible;/)
   assert.match(blockFor('.gallery-track'), /will-change: transform;/)
   assert.match(blockFor('.gallery-track img'), /border-radius: 10px;/)
+  assert.match(blockFor('.gallery-track img'), /object-position: center bottom;/)
   assert.match(blockFor('.gallery-prev'), /left: -84px;/)
   assert.match(blockFor('.gallery-prev'), /top: 225px;/)
   assert.match(blockFor('.gallery-next'), /right: 66px;/)

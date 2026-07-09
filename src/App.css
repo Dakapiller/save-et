@@ -346,7 +346,7 @@ select {
 .hero-image {
   height: 876px;
   object-fit: cover;
-  object-position: center top;
+  object-position: center 70%;
   position: absolute;
   right: calc(-1 * var(--side) - 31px);
   top: -27px;
@@ -1410,6 +1410,7 @@ select {
   flex: 0 0 auto;
   height: 513px;
   object-fit: cover;
+  object-position: center bottom;
 }
 
 .gallery-track img:nth-child(odd) {
@@ -1778,7 +1779,7 @@ select {
     border-radius: 10px;
     height: auto;
     object-fit: cover;
-    object-position: center top;
+    object-position: center 70%;
     opacity: 1;
     /* DOM order is copy then image; the Figma mobile shows the image first. */
     order: -1;
