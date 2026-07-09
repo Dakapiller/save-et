@@ -1775,6 +1775,7 @@ select {
 
   .hero-image {
     aspect-ratio: 1 / 1;
+    border-radius: 10px;
     height: auto;
     object-fit: cover;
     object-position: center top;
@@ -1786,6 +1787,8 @@ select {
   }
 
   .hero-copy {
+    display: flex;
+    flex-direction: column;
     position: static;
     width: 100%;
   }
@@ -1802,14 +1805,21 @@ select {
 
   .hero-copy h1 {
     line-height: 1.1;
+    order: 1;
     width: 100%;
   }
 
   .hero-copy p {
     font-size: 20px;
     line-height: 1.35;
-    margin: 16px 0 34px;
+    margin: 24px 0 0;
+    order: 3;
     width: 100%;
+  }
+
+  .hero-copy .campaign-button {
+    margin: 24px 0 0;
+    order: 2;
   }
 
   .campaign-button {
