@@ -49,6 +49,13 @@ test('footer about top rule is the rounded Figma shape', () => {
   assert.match(footerRule, /width: 401\.881px;/)
 })
 
+test('footer mark sits 110px after the social links on desktop', () => {
+  const footerMark = blockFor('.footer-mark')
+
+  assert.match(footerMark, /bottom: 7px;/)
+  assert.match(footerMark, /height: 448px;/)
+})
+
 test('footer contact labels and values use the Figma colors and type', () => {
   assert.match(blockFor('.site-footer address'), /margin-right: 0;/)
 
