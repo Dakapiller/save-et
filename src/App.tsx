@@ -1204,7 +1204,6 @@ function App() {
                     <div className="person-meta">
                       <h3>{person.name}</h3>
                       <span>{person.role}</span>
-                      <span>{person.since}</span>
                     </div>
                   </article>
                 ))}

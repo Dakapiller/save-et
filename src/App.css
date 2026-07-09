@@ -873,6 +873,7 @@ select {
 }
 
 .portrait-mask {
+  border-radius: 5px;
   height: 281.28px;
   left: 16.543px;
   overflow: hidden;
@@ -882,6 +883,7 @@ select {
 }
 
 .portrait-image {
+  border-radius: 5px;
   display: block;
   height: var(--portrait-image-height);
   left: var(--portrait-image-left);
@@ -934,30 +936,20 @@ select {
 }
 
 .person-meta span {
+  color: var(--muted);
+  display: -webkit-box;
   font-size: 10.548px;
   font-weight: 800;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   letter-spacing: 0.527px;
+  left: 0;
+  overflow: hidden;
   position: absolute;
   top: 33.988px;
   line-height: 1.1;
   text-transform: uppercase;
-}
-
-.person-meta span:first-of-type {
-  color: var(--muted);
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  left: 0;
-  width: 132px;
-}
-
-.person-meta span:last-child {
-  color: #b6bbd0;
-  left: 149.872px;
-  text-align: right;
-  width: 96px;
+  width: 241.432px;
 }
 
 .round-arrow {
@@ -2036,7 +2028,7 @@ select {
     left: auto;
     margin: 0 0 28px;
     overflow: hidden;
-    position: static;
+    position: relative;
     top: auto;
     width: 100%;
   }
@@ -2065,8 +2057,9 @@ select {
 
   .portrait-mask {
     height: 240px;
-    left: 24px;
-    top: 24px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     width: 203px;
   }
 
@@ -2104,22 +2097,14 @@ select {
     font-size: 9px;
     letter-spacing: 0.45px;
     top: 29px;
-  }
-
-  .person-meta span:first-of-type {
-    width: 92px;
-  }
-
-  .person-meta span:last-child {
-    left: 125px;
-    width: 88px;
+    width: 210px;
   }
 
   .people-fade {
     display: block;
-    height: 437px;
+    height: 270.851px;
     right: 0;
-    top: 0;
+    top: 9.447px;
     width: 110px;
   }
 
