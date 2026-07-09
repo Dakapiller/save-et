@@ -693,78 +693,61 @@ function App() {
         })
       })
 
-      // ---- Desktop: pinned step-through. Each section locks and reveals one item
-      // per scroll, snapping to each. ----
+      // ---- Desktop: section reveal timelines. These keep the staged motion, but
+      // play on entry instead of pinning the viewport and consuming scroll gestures.
       mm.add('(min-width: 1101px) and (prefers-reduced-motion: no-preference)', () => {
-        const STEP = 320
-        const snap = {
-          snapTo: 'labels' as const,
-          duration: { min: 0.2, max: 0.6 },
-          delay: 0.04,
-          ease: 'power1.inOut',
-        }
+        const revealStart = 'top 72%'
 
-        // Stats — title, then each counter reveals + counts up per scroll step.
+        // Stats — title, then each counter reveals + counts up as one entry sequence.
         const statCards = gsap.utils.toArray<HTMLElement>('.stat-card')
         const statsTl = gsap.timeline({
-          defaults: { duration: 1, ease: ease.arrival },
+          defaults: { duration: dur.medium, ease: ease.arrival },
           scrollTrigger: {
             trigger: '.stats-section',
-            start: 'top 120px',
-            end: `+=${STEP * (statCards.length + 1)}`,
-            pin: true,
-            anticipatePin: 1,
-            scrub: 1,
-            snap,
+            start: revealStart,
+            once: true,
           },
         })
-        statsTl.from('.stats-title', { y: 40, autoAlpha: 0 }).addLabel('s0')
-        statCards.forEach((card, index) => {
+        statsTl.from('.stats-title', { y: 40, autoAlpha: 0 })
+        statCards.forEach((card) => {
           statsTl.from(card, { y: 48, autoAlpha: 0, scale: 0.97 }, '>')
           const value = card.querySelector<HTMLElement>('.stat-value')
           if (value) {
-            statsTl.add(countUpTween(value), '<')
+            statsTl.add(countUpTween(value, 0.9), '<')
           }
-          statsTl.addLabel(`s${index + 1}`)
         })
 
-        // History — each milestone draws its segment + dot + label per scroll step.
+        // History — each milestone draws its segment + dot + label in sequence.
         const milestones = gsap.utils.toArray<HTMLElement>('.timeline article')
         const segments = gsap.utils.toArray<HTMLElement>('.timeline-segment')
         gsap.set(segments, { transformOrigin: 'left center' })
         const historyTl = gsap.timeline({
-          defaults: { duration: 1, ease: ease.arrival },
+          defaults: { duration: dur.medium, ease: ease.arrival },
           scrollTrigger: {
             trigger: '.history-section',
-            start: 'top 120px',
-            end: `+=${STEP * (milestones.length + 1)}`,
-            pin: true,
-            anticipatePin: 1,
-            scrub: 1,
-            snap,
+            start: revealStart,
+            once: true,
           },
         })
-        historyTl.from('.history-title', { y: 40, autoAlpha: 0 }).addLabel('h0')
+        historyTl.from('.history-title', { y: 40, autoAlpha: 0 })
         milestones.forEach((milestone, index) => {
           const segment = segments[index - 1]
           if (segment) {
-            historyTl.from(segment, { scaleX: 0, ease: 'none' }, '>')
+            historyTl.from(segment, { scaleX: 0, duration: dur.medium, ease: 'none' }, '>')
           }
           historyTl.from(
             milestone.querySelector('.timeline-dot'),
-            { scale: 0, transformOrigin: 'center', duration: 0.6, ease: ease.snap },
-            segment ? '<0.25' : '>',
+            { scale: 0, transformOrigin: 'center', duration: dur.medium, ease: ease.snap },
+            segment ? '<0.18' : '>',
           )
           historyTl.from(
             milestone.querySelectorAll('h3, p'),
-            { y: 14, autoAlpha: 0, stagger: 0.06, duration: 0.6 },
+            { y: 14, autoAlpha: 0, stagger: 0.06, duration: dur.medium },
             '<',
           )
-          historyTl.addLabel(`h${index + 1}`)
         })
 
-        // Ecosystem — each node blooms one per step; after all four, the connectors
-        // appear as one step, then the whole orbit starts rotating.
+        // Ecosystem — each node blooms, then the connectors appear and the orbit rotates.
         const nodes = gsap.utils.toArray<HTMLElement>('.orbit-node')
         const links = gsap.utils.toArray<HTMLElement>('.orbit-link')
         // Fade only — the connectors carry CSS flips (scaleX/scaleY/rotate) to fit
@@ -799,145 +782,107 @@ function App() {
         }
 
         const orbitTl = gsap.timeline({
-          defaults: { duration: 1, ease: ease.snap },
+          defaults: { duration: dur.medium, ease: ease.snap },
           scrollTrigger: {
-            trigger: '.ecosystem-section',
-            start: 'top 120px',
-            end: `+=${STEP * (nodes.length + 1)}`,
-            pin: true,
-            anticipatePin: 1,
-            scrub: 1,
-            snap,
+            trigger: '.ecosystem-orbit',
+            start: 'top 78%',
+            once: true,
           },
         })
-        orbitTl.addLabel('o0')
-        nodes.forEach((node, index) => {
+        nodes.forEach((node) => {
           orbitTl.from(node, { scale: 0.5, autoAlpha: 0, transformOrigin: 'center' }, '>')
-          orbitTl.addLabel(`o${index + 1}`)
         })
-        // Step 5: connectors fade in once every node is present. The spin kicks off
-        // on the SAME swipe via onStart — with scrub:1, waiting for onComplete lands
-        // a hair short of the tween end and the spin would only fire on the next swipe.
         orbitTl.to(links, {
           autoAlpha: 1,
           stagger: 0.1,
           ease: ease.arrival,
           onStart: startOrbitRotation,
         }, '>')
-        orbitTl.addLabel(`o${nodes.length + 1}`)
 
-        // Beliefs — each pro/con row (preserve + demolish together) reveals per step.
+        // Beliefs — each pro/con row (preserve + demolish together) reveals in sequence.
         const preserveItems = gsap.utils.toArray<HTMLElement>('.belief-card--preserve li')
         const demolishItems = gsap.utils.toArray<HTMLElement>('.belief-card--demolish li')
         const beliefRows = Math.max(preserveItems.length, demolishItems.length)
         gsap.set([...preserveItems, ...demolishItems], { autoAlpha: 0, x: -20 })
         gsap.set('.belief-card li img', { scale: 0, transformOrigin: 'center' })
         const beliefsTl = gsap.timeline({
-          defaults: { duration: 1, ease: ease.arrival },
+          defaults: { duration: dur.medium, ease: ease.arrival },
           scrollTrigger: {
             trigger: '.beliefs-section',
-            start: 'top top',
-            end: `+=${STEP * (beliefRows + 1)}`,
-            pin: true,
-            anticipatePin: 1,
-            scrub: 1,
-            snap,
+            start: 'top 72%',
+            once: true,
           },
         })
         beliefsTl
           .from('.beliefs-kicker, .beliefs-title', { y: 30, autoAlpha: 0, stagger: 0.08 })
           .from('.belief-card', { y: 56, autoAlpha: 0, stagger: 0.12 }, '<0.1')
-          .addLabel('b0')
         for (let row = 0; row < beliefRows; row += 1) {
           const items = [preserveItems[row], demolishItems[row]].filter(Boolean)
           const icons = items
             .map((item) => item.querySelector('img'))
             .filter((icon): icon is HTMLImageElement => Boolean(icon))
-          beliefsTl.to(items, { autoAlpha: 1, x: 0, duration: 1, ease: ease.arrival }, '>')
+          beliefsTl.to(items, { autoAlpha: 1, x: 0, duration: dur.medium, ease: ease.arrival }, '>')
           if (icons.length) {
-            beliefsTl.to(icons, { scale: 1, duration: 0.6, ease: ease.snap }, '<')
+            beliefsTl.to(icons, { scale: 1, duration: dur.medium, ease: ease.snap }, '<')
           }
-          beliefsTl.addLabel(`b${row + 1}`)
         }
       })
 
-      // ---- Tablet / mobile: pinned step-through, mirroring desktop. Now that the
-      // mobile layout is natural flow (content-sized sections) rather than an
-      // absolute canvas, each section can lock and reveal one item per swipe with
-      // snapping — the same model as desktop, with mobile-appropriate targets
-      // (vertical timeline dots, mobile orbit lines, stacked belief cards). ----
+      // ---- Tablet / mobile: same staged reveals, but in natural page flow.
       mm.add('(max-width: 1100px) and (prefers-reduced-motion: no-preference)', () => {
-        const STEP = 220
-        const snap = {
-          snapTo: 'labels' as const,
-          duration: { min: 0.2, max: 0.6 },
-          delay: 0.04,
-          ease: 'power1.inOut',
-        }
-        const pinStart = 'top 64px'
+        const revealStart = 'top 78%'
 
-        // Stats — title, then each counter reveals + counts up per scroll step.
+        // Stats — title, then each counter reveals + counts up as one entry sequence.
         const statCards = gsap.utils.toArray<HTMLElement>('.stat-card')
         const statsTl = gsap.timeline({
-          defaults: { duration: 1, ease: ease.arrival },
+          defaults: { duration: dur.medium, ease: ease.arrival },
           scrollTrigger: {
             trigger: '.stats-section',
-            start: pinStart,
-            end: `+=${STEP * (statCards.length + 1)}`,
-            pin: true,
-            anticipatePin: 1,
-            scrub: 1,
-            snap,
+            start: revealStart,
+            once: true,
           },
         })
-        statsTl.from('.stats-title', { y: 40, autoAlpha: 0 }).addLabel('s0')
-        statCards.forEach((card, index) => {
+        statsTl.from('.stats-title', { y: 40, autoAlpha: 0 })
+        statCards.forEach((card) => {
           statsTl.from(card, { y: 48, autoAlpha: 0, scale: 0.97 }, '>')
           const value = card.querySelector<HTMLElement>('.stat-value')
           if (value) {
-            statsTl.add(countUpTween(value), '<')
+            statsTl.add(countUpTween(value, 0.9), '<')
           }
-          statsTl.addLabel(`s${index + 1}`)
         })
 
-        // History — each milestone (dot + label) reveals per step. The connector
+        // History — each milestone (dot + label) reveals in sequence. The connector
         // line is a CSS pseudo-element on the article, so it appears with the dot.
         const milestones = gsap.utils.toArray<HTMLElement>('.timeline article')
         const historyTl = gsap.timeline({
-          defaults: { duration: 1, ease: ease.arrival },
+          defaults: { duration: dur.medium, ease: ease.arrival },
           scrollTrigger: {
             trigger: '.history-section',
-            start: pinStart,
-            end: `+=${STEP * (milestones.length + 1)}`,
-            pin: true,
-            anticipatePin: 1,
-            scrub: 1,
-            snap,
+            start: revealStart,
+            once: true,
           },
         })
-        historyTl.from('.history-title', { y: 40, autoAlpha: 0 }).addLabel('h0')
+        historyTl.from('.history-title', { y: 40, autoAlpha: 0 })
         milestones.forEach((milestone, index) => {
           // Draw the connector line leading into this milestone (it lives on the
           // previous article's ::before), then pop the dot, then the label.
           const previous = milestones[index - 1]
           if (previous) {
-            historyTl.from(previous, { '--line-scale': 0, ease: 'none', duration: 1 }, '>')
+            historyTl.from(previous, { '--line-scale': 0, ease: 'none', duration: dur.medium }, '>')
           }
           historyTl.from(
             milestone.querySelector('.timeline-dot'),
-            { scale: 0, transformOrigin: 'center', duration: 0.6, ease: ease.snap },
-            previous ? '<0.25' : '>',
+            { scale: 0, transformOrigin: 'center', duration: dur.medium, ease: ease.snap },
+            previous ? '<0.18' : '>',
           )
           historyTl.from(
             milestone.querySelectorAll('h3, p'),
-            { y: 14, autoAlpha: 0, stagger: 0.06, duration: 0.6 },
+            { y: 14, autoAlpha: 0, stagger: 0.06, duration: dur.medium },
             '<',
           )
-          historyTl.addLabel(`h${index + 1}`)
         })
 
-        // Ecosystem — each node blooms one per step; then the orbit lines fade in
-        // and the whole ring starts rotating (matching desktop).
+        // Ecosystem — each node blooms, then the orbit lines fade in and rotate.
         const nodes = gsap.utils.toArray<HTMLElement>('.orbit-node')
         let rotationStarted = false
         const startOrbitRotation = () => {
@@ -967,64 +912,48 @@ function App() {
         // connectors appear, and the spin kicks off with them.
         gsap.set('.orbit-connectors-mobile', { autoAlpha: 0 })
         const orbitTl = gsap.timeline({
-          defaults: { duration: 1, ease: ease.snap },
+          defaults: { duration: dur.medium, ease: ease.snap },
           scrollTrigger: {
-            trigger: '.ecosystem-section',
-            start: pinStart,
-            end: `+=${STEP * (nodes.length + 1)}`,
-            pin: true,
-            anticipatePin: 1,
-            scrub: 1,
-            snap,
+            trigger: '.ecosystem-orbit',
+            start: 'top 84%',
+            once: true,
           },
         })
-        orbitTl.addLabel('o0')
-        nodes.forEach((node, index) => {
+        nodes.forEach((node) => {
           orbitTl.from(node, { scale: 0.5, autoAlpha: 0, transformOrigin: 'center' }, '>')
-          orbitTl.addLabel(`o${index + 1}`)
         })
         orbitTl.to(
           '.orbit-connectors-mobile',
           { autoAlpha: 1, duration: 1, ease: ease.arrival, onStart: startOrbitRotation },
           '>',
         )
-        orbitTl.addLabel(`o${nodes.length + 1}`)
 
-        // Beliefs — each pro/con row (preserve + demolish together) reveals per
-        // step. Both cards stay in natural flow (no translate) so there's no empty
-        // gap left behind before the gallery; the lower card simply reveals as the
-        // pin releases and it scrolls into view.
+        // Beliefs — each pro/con row (preserve + demolish together) reveals in sequence.
         const preserveItems = gsap.utils.toArray<HTMLElement>('.belief-card--preserve li')
         const demolishItems = gsap.utils.toArray<HTMLElement>('.belief-card--demolish li')
         const beliefRows = Math.max(preserveItems.length, demolishItems.length)
         gsap.set([...preserveItems, ...demolishItems], { autoAlpha: 0, x: -20 })
         gsap.set('.belief-card li img', { scale: 0, transformOrigin: 'center' })
         const beliefsTl = gsap.timeline({
-          defaults: { duration: 1, ease: ease.arrival },
+          defaults: { duration: dur.medium, ease: ease.arrival },
           scrollTrigger: {
             trigger: '.beliefs-section',
-            start: 'top top',
-            end: `+=${STEP * (beliefRows + 1)}`,
-            pin: true,
-            anticipatePin: 1,
-            scrub: 1,
-            snap,
+            start: revealStart,
+            once: true,
           },
         })
         beliefsTl
           .from('.beliefs-kicker, .beliefs-title', { y: 30, autoAlpha: 0, stagger: 0.08 })
           .from('.belief-card', { y: 56, autoAlpha: 0, stagger: 0.12 }, '<0.1')
-          .addLabel('b0')
         for (let row = 0; row < beliefRows; row += 1) {
           const items = [preserveItems[row], demolishItems[row]].filter(Boolean)
           const icons = items
             .map((item) => item.querySelector('img'))
             .filter((icon): icon is HTMLImageElement => Boolean(icon))
-          beliefsTl.to(items, { autoAlpha: 1, x: 0, duration: 1, ease: ease.arrival }, '>')
+          beliefsTl.to(items, { autoAlpha: 1, x: 0, duration: dur.medium, ease: ease.arrival }, '>')
           if (icons.length) {
-            beliefsTl.to(icons, { scale: 1, duration: 0.6, ease: ease.snap }, '<')
+            beliefsTl.to(icons, { scale: 1, duration: dur.medium, ease: ease.snap }, '<')
           }
-          beliefsTl.addLabel(`b${row + 1}`)
         }
       })
 

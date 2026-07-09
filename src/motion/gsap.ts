@@ -93,9 +93,8 @@ export function countUp(el: HTMLElement, trigger: Element | string): void {
   })
 }
 
-// Like countUp, but returns a (scroll-agnostic) tween to embed inside a scrubbed
-// timeline, so the number counts as the user scrolls. Caches the target the same
-// way countUp does, so re-runs never read the already-zeroed text.
+// Like countUp, but returns a tween to embed inside a parent timeline. Caches the
+// target the same way countUp does, so re-runs never read the already-zeroed text.
 export function countUpTween(el: HTMLElement, duration = 1): gsap.core.Tween {
   const raw = (el.dataset.countTo ?? el.textContent ?? '').trim()
   const match = raw.match(/\d[\d.,\s]*/)

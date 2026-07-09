@@ -1657,8 +1657,7 @@ select {
 }
 
 /* Mobile + tablet share one natural-flow treatment, matching the mobile JS
-   breakpoint (max-width: 1100px) so the pinned step-through always pairs with the
-   flow layout. Above 1100px the desktop layout + desktop pinned timelines take over. */
+   breakpoint (max-width: 1100px). Above 1100px the desktop layout takes over. */
 @media (max-width: 1100px) {
   :root {
     --mobile-page: min(100vw, 390px);
@@ -1938,8 +1937,8 @@ select {
     position: relative;
     top: auto;
     width: 100%;
-    /* Drawn by GSAP (0 -> 1) so the connector line scales in per step like the
-       desktop segments; defaults to 1 (fully drawn) when motion is off. */
+    /* Drawn by GSAP (0 -> 1) as each milestone reveals; defaults to 1
+       (fully drawn) when motion is off. */
     --line-scale: 1;
   }
 
