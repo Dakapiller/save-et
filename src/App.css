@@ -1618,12 +1618,25 @@ select {
 
 .social-links a {
   align-items: center;
+  background-image: none;
   display: flex;
   gap: 10px;
 }
 
-.social-links img {
+.social-links .social-icon {
+  -webkit-mask-image: var(--social-icon);
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  background: currentColor;
+  color: inherit;
+  display: block;
+  flex: 0 0 auto;
   height: 20px;
+  mask-image: var(--social-icon);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
   width: 20px;
 }
 

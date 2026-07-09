@@ -74,6 +74,7 @@ import facebookIcon from './assets/figma/vectors/facebook.svg'
 import footerMark from './assets/figma/vectors/footer-mark.svg'
 import hamburgerIcon from './assets/figma/vectors/hamburger.svg'
 import instagramIcon from './assets/figma/vectors/instagram.svg'
+import linkedinIcon from './assets/figma/vectors/linkedin.svg'
 import logo from './assets/figma/vectors/logo.svg'
 import menuCloseIcon from './assets/figma/vectors/menu-close.svg'
 import menuSeparator from './assets/figma/vectors/menu-separator.svg'
@@ -110,6 +111,8 @@ type PeopleImageStyle = CSSProperties &
     '--portrait-image-height' | '--portrait-image-left' | '--portrait-image-top' | '--portrait-image-width',
     string
   >
+
+type SocialIconStyle = CSSProperties & Record<'--social-icon', string>
 
 type CarouselRotate = (direction: 'prev' | 'next') => void
 
@@ -1381,13 +1384,32 @@ function App() {
             </p>
             <div className="social-links">
               <strong>{copy.footer.socialLabel}</strong>
-              <a href="https://www.instagram.com/" aria-label={copy.footer.instagram}>
-                <img alt="" src={instagramIcon} />
+              <a href="https://www.instagram.com/transparentevivo/" aria-label={copy.footer.instagram}>
+                <span
+                  aria-hidden="true"
+                  className="social-icon"
+                  style={{ '--social-icon': `url("${instagramIcon}")` } as SocialIconStyle}
+                />
                 {copy.footer.instagram}
               </a>
-              <a href="https://www.facebook.com/" aria-label={copy.footer.facebook}>
-                <img alt="" src={facebookIcon} />
+              <a
+                href="https://www.facebook.com/profile.php?id=61591740781865"
+                aria-label={copy.footer.facebook}
+              >
+                <span
+                  aria-hidden="true"
+                  className="social-icon"
+                  style={{ '--social-icon': `url("${facebookIcon}")` } as SocialIconStyle}
+                />
                 {copy.footer.facebook}
+              </a>
+              <a href="https://www.linkedin.com/company/transparente-vivo" aria-label={copy.footer.linkedin}>
+                <span
+                  aria-hidden="true"
+                  className="social-icon"
+                  style={{ '--social-icon': `url("${linkedinIcon}")` } as SocialIconStyle}
+                />
+                {copy.footer.linkedin}
               </a>
             </div>
           </address>

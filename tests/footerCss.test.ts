@@ -69,3 +69,23 @@ test('footer contact labels and values use the Figma colors and type', () => {
   assert.match(footerValues, /line-height: 1\.7;/)
   assert.match(footerValues, /text-transform: uppercase;/)
 })
+
+test('footer social icons follow row text color without hover underlines', () => {
+  assert.match(app, /className="social-icon"/)
+  assert.match(app, /'--social-icon': `url\("\$\{instagramIcon\}"\)`/)
+  assert.match(app, /'--social-icon': `url\("\$\{facebookIcon\}"\)`/)
+  assert.match(app, /'--social-icon': `url\("\$\{linkedinIcon\}"\)`/)
+  assert.match(app, /href="https:\/\/www\.instagram\.com\/transparentevivo\/"/)
+  assert.match(app, /href="https:\/\/www\.facebook\.com\/profile\.php\?id=61591740781865"/)
+  assert.match(app, /href="https:\/\/www\.linkedin\.com\/company\/transparente-vivo"/)
+  assert.match(app, /aria-label=\{copy\.footer\.linkedin\}/)
+
+  const socialLink = blockFor('.social-links a')
+  const socialIcon = blockFor('.social-links .social-icon')
+
+  assert.match(socialLink, /background-image: none;/)
+  assert.match(socialIcon, /-webkit-mask-image: var\(--social-icon\);/)
+  assert.match(socialIcon, /background: currentColor;/)
+  assert.match(socialIcon, /color: inherit;/)
+  assert.match(socialIcon, /mask-image: var\(--social-icon\);/)
+})

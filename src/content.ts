@@ -127,6 +127,7 @@ type LocaleContent = {
     socialLabel: string
     instagram: string
     facebook: string
+    linkedin: string
   }
 }
 
@@ -391,6 +392,7 @@ export const content = {
       socialLabel: 'Social',
       instagram: 'instagram',
       facebook: 'facebook',
+      linkedin: 'linkedin',
     },
   },
   en: {
@@ -653,6 +655,7 @@ export const content = {
       socialLabel: 'Social',
       instagram: 'instagram',
       facebook: 'facebook',
+      linkedin: 'linkedin',
     },
   },
 } satisfies Record<LanguageCode, LocaleContent>
