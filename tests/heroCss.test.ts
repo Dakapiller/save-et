@@ -14,10 +14,22 @@ function blockFor(selector: string) {
   return match[1]
 }
 
+function blockForIn(source: string, selector: string) {
+  const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const match = source.match(new RegExp(`${escapedSelector} \\{([\\s\\S]*?)\\n\\}`))
+
+  assert.ok(match, `Missing CSS block for ${selector}`)
+
+  return match[1]
+}
+
+const mobileCss = css.slice(css.indexOf('@media (max-width: 1100px)'), css.indexOf('@media (max-width: 400px)'))
+
 test('desktop hero image reaches the viewport right edge from inside the wrapper', () => {
   const heroImage = blockFor('.hero-image')
 
   assert.match(heroImage, /position: absolute;/)
+  assert.match(heroImage, /object-position: center 70%;/)
   assert.match(heroImage, /right: calc\(-1 \* var\(--side\) - 31px\);/)
   assert.match(heroImage, /width: 741px;/)
 })
@@ -27,4 +39,19 @@ test('4k hero image keeps the Figma content offset instead of reaching the viewp
     css,
     /@media \(min-width: 2200px\) \{[\s\S]*?\.hero-image \{[\s\S]*?right: -31px;[\s\S]*?\}/,
   )
+})
+
+test('mobile hero image has rounded corners', () => {
+  const heroImage = blockForIn(mobileCss, '.hero-image')
+
+  assert.match(heroImage, /border-radius: 10px;/)
+  assert.match(heroImage, /object-position: center 70%;/)
+})
+
+test('mobile hero CTA appears directly after the title before the body copy', () => {
+  assert.match(blockForIn(mobileCss, '.hero-copy'), /display: flex;/)
+  assert.match(blockForIn(mobileCss, '.hero-copy'), /flex-direction: column;/)
+  assert.match(blockForIn(mobileCss, '.hero-copy h1'), /order: 1;/)
+  assert.match(blockForIn(mobileCss, '.hero-copy .campaign-button'), /order: 2;/)
+  assert.match(blockForIn(mobileCss, '.hero-copy p'), /order: 3;/)
 })

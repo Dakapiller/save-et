@@ -17,21 +17,22 @@ function blockFor(selector: string) {
 
 test('sign CTA buttons are stacked to match the Figma desktop rows', () => {
   assert.match(app, /<div className="sign-actions">[\s\S]*campaign-button--whatsapp/)
+  assert.match(blockFor('.sign-section'), /background: linear-gradient\(180deg, #ffffff 0%, var\(--sky\) 28%, var\(--sky\) 100%\);/)
   assert.match(blockFor('.sign-layout'), /position: relative;/)
   assert.match(blockFor('.sign-title'), /position: absolute;/)
-  assert.match(blockFor('.sign-title'), /top: 174px;/)
+  assert.match(blockFor('.sign-title'), /top: 164px;/)
   assert.match(blockFor('.sign-layout p'), /position: absolute;/)
-  assert.match(blockFor('.sign-layout p'), /top: 366px;/)
+  assert.match(blockFor('.sign-layout p'), /top: 356px;/)
   assert.match(blockFor('.sign-actions'), /display: grid;/)
   assert.match(blockFor('.sign-actions'), /gap: 26px;/)
   assert.match(blockFor('.sign-actions'), /left: 0;/)
   assert.match(blockFor('.sign-actions'), /position: absolute;/)
-  assert.match(blockFor('.sign-actions'), /top: 544px;/)
+  assert.match(blockFor('.sign-actions'), /top: 534px;/)
   assert.match(blockFor('.sign-actions'), /width: 400px;/)
 })
 
 test('sign CTA shows the community workspace image beside the copy on desktop', () => {
-  assert.match(app, /import signCtaImage from '\.\/assets\/figma\/sign-cta\.png'/)
+  assert.match(app, /import signCtaImage from '\.\/assets\/figma\/gallery\/gallery-15\.jpg'/)
   assert.match(app, /<img alt="" className="sign-image" src=\{signCtaImage\} \/>/)
 
   const image = blockFor('.sign-image')
@@ -41,7 +42,7 @@ test('sign CTA shows the community workspace image beside the copy on desktop', 
   assert.match(image, /object-fit: cover;/)
   assert.match(image, /position: absolute;/)
   assert.match(image, /right: 0;/)
-  assert.match(image, /top: 49px;/)
+  assert.match(image, /top: 91px;/)
   assert.match(image, /width: 562px;/)
 
   assert.match(

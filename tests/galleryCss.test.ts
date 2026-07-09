@@ -16,6 +16,8 @@ function blockFor(selector: string) {
 }
 
 test('gallery wrapper and arrows use desktop side placement', () => {
+  assert.match(blockFor('.gallery-section'), /background: #ffffff;/)
+  assert.match(blockFor('.gallery-section'), /height: 820px;/)
   assert.match(blockFor('.gallery-wrap'), /left: calc\(var\(--side\) \+ 1px\);/)
   assert.match(
     blockFor('.gallery-wrap'),
@@ -23,6 +25,8 @@ test('gallery wrapper and arrows use desktop side placement', () => {
   )
   assert.match(blockFor('.gallery-track'), /overflow: visible;/)
   assert.match(blockFor('.gallery-track'), /will-change: transform;/)
+  assert.match(blockFor('.gallery-track img'), /border-radius: 10px;/)
+  assert.match(blockFor('.gallery-track img'), /object-position: center bottom;/)
   assert.match(blockFor('.gallery-prev'), /left: -84px;/)
   assert.match(blockFor('.gallery-prev'), /top: 225px;/)
   assert.match(blockFor('.gallery-next'), /right: 66px;/)
@@ -32,9 +36,13 @@ test('gallery wrapper and arrows use desktop side placement', () => {
 test('gallery carousel uses the same measured slide pattern as people carousel', () => {
   assert.equal(
     app.match(/import galleryCommunity\d+ from '\.\/assets\/figma\/gallery\/gallery-\d+\.jpg'/g)?.length,
-    30,
+    19,
   )
-  assert.match(app, /const galleryImages = \[galleryOne, galleryTwo, \.\.\.galleryCommunityImages\] as const/)
+  assert.match(
+    app,
+    /const galleryCommunityImages = \[\n  galleryCommunity13,\n  galleryCommunity04,\n  galleryCommunity20,\n  galleryCommunity01,\n  galleryCommunity17,\n  galleryCommunity18,\n  galleryCommunity24,\n  galleryCommunity06,\n  galleryCommunity26,\n  galleryCommunity09,\n  galleryCommunity14,\n  galleryCommunity23,\n  galleryCommunity08,\n  galleryCommunity10,\n  galleryCommunity27,\n  galleryCommunity11,\n  galleryCommunity25,\n  galleryCommunity16,\n  galleryCommunity22,\n\] as const/,
+  )
+  assert.match(app, /const galleryImages = galleryCommunityImages/)
   assert.match(app, /const galleryTrackImages = \[\.\.\.galleryImages, galleryImages\[0\], galleryImages\[1\]\] as const/)
   assert.match(app, /galleryTrackImages\.map\(\(image, index\) => \(/)
   assert.match(app, /querySelector<HTMLElement>\('\.gallery-track'\)/)
@@ -55,8 +63,10 @@ test('gallery carousel masks both sides with the same overlap treatment', () => 
   const hiddenFade = blockFor('.gallery-fade--hidden')
 
   assert.match(rightFade, /background: linear-gradient\(90deg, rgba\(255, 255, 255, 0\), #ffffff 137px, #ffffff\);/)
+  assert.match(rightFade, /height: 513px;/)
   assert.match(rightFade, /pointer-events: none;/)
   assert.match(rightFade, /right: calc\(-1 \* var\(--side\)\);/)
+  assert.match(rightFade, /top: 0;/)
   assert.match(rightFade, /width: calc\(var\(--side\) \+ 185px\);/)
   assert.match(rightFade, /z-index: 3;/)
 

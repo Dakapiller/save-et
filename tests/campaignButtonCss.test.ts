@@ -9,6 +9,7 @@ const campaignArrow = readFileSync(
   join(process.cwd(), 'src', 'assets', 'figma', 'vectors', 'campaign-arrow.svg'),
   'utf8',
 )
+const petitionUrl = 'https://peticaopublica.com/pview.aspx?pi=PT131237'
 
 function blockFor(selector: string) {
   const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -62,4 +63,12 @@ test('primary campaign buttons reveal the Figma dark-blue via an animated fill s
   assert.match(sweep, /background: var\(--blue-dark\);/)
   assert.match(sweep, /transform: translateX\(-101%\);/)
   assert.match(sweepHover, /transform: translateX\(0\);/)
+})
+
+test('active orange campaign buttons link to the public petition', () => {
+  assert.match(app, new RegExp(`const PETITION_URL = '${petitionUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}'`))
+  assert.match(app, /<CampaignButton href=\{PETITION_URL\}>[\s\S]*?\{copy\.nav\.petition\}[\s\S]*?<\/CampaignButton>/)
+  assert.match(app, /<CampaignButton href=\{PETITION_URL\}>\{copy\.hero\.cta\}<\/CampaignButton>/)
+  assert.match(app, /<CampaignButton href=\{PETITION_URL\}>\{copy\.peopleSection\.cta\}<\/CampaignButton>/)
+  assert.match(app, /<CampaignButton href=\{PETITION_URL\} variant="primary">/)
 })

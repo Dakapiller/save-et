@@ -346,7 +346,7 @@ select {
 .hero-image {
   height: 876px;
   object-fit: cover;
-  object-position: center top;
+  object-position: center 70%;
   position: absolute;
   right: calc(-1 * var(--side) - 31px);
   top: -27px;
@@ -873,6 +873,7 @@ select {
 }
 
 .portrait-mask {
+  border-radius: 5px;
   height: 281.28px;
   left: 16.543px;
   overflow: hidden;
@@ -882,6 +883,7 @@ select {
 }
 
 .portrait-image {
+  border-radius: 5px;
   display: block;
   height: var(--portrait-image-height);
   left: var(--portrait-image-left);
@@ -934,30 +936,20 @@ select {
 }
 
 .person-meta span {
+  color: var(--muted);
+  display: -webkit-box;
   font-size: 10.548px;
   font-weight: 800;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   letter-spacing: 0.527px;
+  left: 0;
+  overflow: hidden;
   position: absolute;
   top: 33.988px;
   line-height: 1.1;
   text-transform: uppercase;
-}
-
-.person-meta span:first-of-type {
-  color: var(--muted);
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  left: 0;
-  width: 132px;
-}
-
-.person-meta span:last-child {
-  color: #b6bbd0;
-  left: 149.872px;
-  text-align: right;
-  width: 96px;
+  width: 241.432px;
 }
 
 .round-arrow {
@@ -1389,8 +1381,8 @@ select {
 }
 
 .gallery-section {
-  background: linear-gradient(180deg, #ffffff 0%, #ffffff 76%, var(--sky) 100%);
-  height: 720px;
+  background: #ffffff;
+  height: 820px;
   position: relative;
 }
 
@@ -1413,10 +1405,12 @@ select {
 }
 
 .gallery-track img {
+  border-radius: 10px;
   display: block;
   flex: 0 0 auto;
   height: 513px;
   object-fit: cover;
+  object-position: center bottom;
 }
 
 .gallery-track img:nth-child(odd) {
@@ -1429,11 +1423,11 @@ select {
 
 .gallery-fade {
   background: linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 137px, #ffffff);
-  height: 616px;
+  height: 513px;
   pointer-events: none;
   position: absolute;
   right: calc(-1 * var(--side));
-  top: -50px;
+  top: 0;
   width: calc(var(--side) + 185px);
   z-index: 3;
 }
@@ -1461,7 +1455,7 @@ select {
 }
 
 .sign-section {
-  background: linear-gradient(180deg, #ffffff 0%, var(--sky) 11%, var(--sky) 100%);
+  background: linear-gradient(180deg, #ffffff 0%, var(--sky) 28%, var(--sky) 100%);
   height: 845px;
 }
 
@@ -1474,7 +1468,7 @@ select {
 .sign-title {
   left: 0;
   position: absolute;
-  top: 174px;
+  top: 164px;
   width: 504px;
 }
 
@@ -1485,7 +1479,7 @@ select {
   line-height: 1.5;
   margin: 0;
   position: absolute;
-  top: 366px;
+  top: 356px;
   width: 369px;
 }
 
@@ -1494,7 +1488,7 @@ select {
   gap: 26px;
   left: 0;
   position: absolute;
-  top: 544px;
+  top: 534px;
   width: 400px;
 }
 
@@ -1505,7 +1499,7 @@ select {
   object-fit: cover;
   position: absolute;
   right: 0;
-  top: 49px;
+  top: 91px;
   width: 562px;
 }
 
@@ -1617,17 +1611,30 @@ select {
 
 .social-links a {
   align-items: center;
+  background-image: none;
   display: flex;
   gap: 10px;
 }
 
-.social-links img {
+.social-links .social-icon {
+  -webkit-mask-image: var(--social-icon);
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  background: currentColor;
+  color: inherit;
+  display: block;
+  flex: 0 0 auto;
   height: 20px;
+  mask-image: var(--social-icon);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
   width: 20px;
 }
 
 .footer-mark {
-  bottom: 67px;
+  bottom: 7px;
   height: 448px;
   left: 50%;
   max-width: none;
@@ -1657,8 +1664,7 @@ select {
 }
 
 /* Mobile + tablet share one natural-flow treatment, matching the mobile JS
-   breakpoint (max-width: 1100px) so the pinned step-through always pairs with the
-   flow layout. Above 1100px the desktop layout + desktop pinned timelines take over. */
+   breakpoint (max-width: 1100px). Above 1100px the desktop layout takes over. */
 @media (max-width: 1100px) {
   :root {
     --mobile-page: min(100vw, 390px);
@@ -1770,9 +1776,10 @@ select {
 
   .hero-image {
     aspect-ratio: 1 / 1;
+    border-radius: 10px;
     height: auto;
     object-fit: cover;
-    object-position: center top;
+    object-position: center 70%;
     opacity: 1;
     /* DOM order is copy then image; the Figma mobile shows the image first. */
     order: -1;
@@ -1781,6 +1788,8 @@ select {
   }
 
   .hero-copy {
+    display: flex;
+    flex-direction: column;
     position: static;
     width: 100%;
   }
@@ -1797,14 +1806,21 @@ select {
 
   .hero-copy h1 {
     line-height: 1.1;
+    order: 1;
     width: 100%;
   }
 
   .hero-copy p {
     font-size: 20px;
     line-height: 1.35;
-    margin: 16px 0 34px;
+    margin: 24px 0 0;
+    order: 3;
     width: 100%;
+  }
+
+  .hero-copy .campaign-button {
+    margin: 24px 0 0;
+    order: 2;
   }
 
   .campaign-button {
@@ -1938,8 +1954,8 @@ select {
     position: relative;
     top: auto;
     width: 100%;
-    /* Drawn by GSAP (0 -> 1) so the connector line scales in per step like the
-       desktop segments; defaults to 1 (fully drawn) when motion is off. */
+    /* Drawn by GSAP (0 -> 1) as each milestone reveals; defaults to 1
+       (fully drawn) when motion is off. */
     --line-scale: 1;
   }
 
@@ -2023,7 +2039,7 @@ select {
     left: auto;
     margin: 0 0 28px;
     overflow: hidden;
-    position: static;
+    position: relative;
     top: auto;
     width: 100%;
   }
@@ -2052,8 +2068,9 @@ select {
 
   .portrait-mask {
     height: 240px;
-    left: 24px;
-    top: 24px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     width: 203px;
   }
 
@@ -2091,22 +2108,14 @@ select {
     font-size: 9px;
     letter-spacing: 0.45px;
     top: 29px;
-  }
-
-  .person-meta span:first-of-type {
-    width: 92px;
-  }
-
-  .person-meta span:last-child {
-    left: 125px;
-    width: 88px;
+    width: 210px;
   }
 
   .people-fade {
     display: block;
-    height: 437px;
+    height: 270.851px;
     right: 0;
-    top: 0;
+    top: 9.447px;
     width: 110px;
   }
 
@@ -2517,7 +2526,7 @@ select {
   .site-footer address {
     gap: 30px;
     left: auto;
-    margin: 36px 0 0;
+    margin: 36px 0 64px;
     position: static;
     top: auto;
     width: 100%;

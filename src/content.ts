@@ -127,6 +127,7 @@ type LocaleContent = {
     socialLabel: string
     instagram: string
     facebook: string
+    linkedin: string
   }
 }
 
@@ -164,7 +165,7 @@ export const content = {
         label: 'trabalham aqui todos os dias',
       },
       {
-        value: '100',
+        value: '~100',
         emphasis: 'empresas',
         label: 'dependem deste ecossistema',
       },
@@ -243,7 +244,7 @@ export const content = {
         name: 'Manuel',
         role: 'Porteiro',
         since: 'Aqui desde',
-        quote: '...',
+        quote: 'Aqui encontrei o meu lugar.',
       },
       {
         id: 'diogo',
@@ -391,6 +392,7 @@ export const content = {
       socialLabel: 'Social',
       instagram: 'instagram',
       facebook: 'facebook',
+      linkedin: 'linkedin',
     },
   },
   en: {
@@ -409,7 +411,7 @@ export const content = {
     hero: {
       titleStart: 'A',
       titleEmphasis: 'living community',
-      titleEnd: 'is city heritage',
+      titleEnd: "is the city's heritage",
       body:
         'This space is now a place for work, gathering, and creation. Before deciding its future, it is essential to listen to the people who bring it to life every day.',
       cta: 'Support this cause',
@@ -426,7 +428,7 @@ export const content = {
         label: 'work here every day',
       },
       {
-        value: '100',
+        value: '~100',
         emphasis: 'companies',
         label: 'depend on this ecosystem',
       },
@@ -448,7 +450,7 @@ export const content = {
         { year: '2001', label: 'Built for culture' },
         { year: '2007', label: 'Opened to the public' },
         { year: '2021', label: 'Office space created' },
-        { year: '2025', label: 'Building fully occupied' },
+        { year: '2025', label: 'Building 100% occupied' },
         { year: 'Now', label: 'Demolition announced', active: true },
       ],
     },
@@ -505,7 +507,7 @@ export const content = {
         name: 'Manuel',
         role: 'Doorman',
         since: 'here since',
-        quote: '...',
+        quote: 'Here I found my place.',
       },
       {
         id: 'diogo',
@@ -634,7 +636,7 @@ export const content = {
     },
     cta: {
       titleStart: 'Sign to',
-      titleEmphasis: 'empower',
+      titleEmphasis: 'protect',
       titleEnd: 'this ecosystem',
       body:
         'We believe in solutions that preserve the value and economic activity of an ecosystem that is already working.',
@@ -653,6 +655,7 @@ export const content = {
       socialLabel: 'Social',
       instagram: 'instagram',
       facebook: 'facebook',
+      linkedin: 'linkedin',
     },
   },
 } satisfies Record<LanguageCode, LocaleContent>

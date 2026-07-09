@@ -35,9 +35,11 @@ test('person card inner elements use Figma forms and offsets', () => {
   assert.match(blockFor('.portrait-frame-lines'), /width: 269\.421px;/)
   assert.match(blockFor('.portrait-mask'), /height: 281\.28px;/)
   assert.match(blockFor('.portrait-mask'), /left: 16\.543px;/)
+  assert.match(blockFor('.portrait-mask'), /border-radius: 5px;/)
   assert.match(blockFor('.portrait-mask'), /overflow: hidden;/)
   assert.match(blockFor('.portrait-mask'), /top: 17\.056px;/)
   assert.match(blockFor('.portrait-mask'), /width: 237\.916px;/)
+  assert.match(blockFor('.portrait-image'), /border-radius: 5px;/)
   assert.match(blockFor('.portrait-image'), /height: var\(--portrait-image-height\);/)
   assert.match(blockFor('.portrait-image'), /left: var\(--portrait-image-left\);/)
   assert.match(blockFor('.portrait-image'), /top: var\(--portrait-image-top\);/)
@@ -52,9 +54,9 @@ test('person card inner elements use Figma forms and offsets', () => {
   assert.match(blockFor('.person-meta'), /top: 446\.532px;/)
   assert.match(blockFor('.person-meta h3'), /font-size: 23px;/)
   assert.match(blockFor('.person-meta h3'), /font-weight: 700;/)
-  assert.match(blockFor('.person-meta span:first-of-type'), /color: var\(--muted\);/)
-  assert.match(blockFor('.person-meta span:last-child'), /color: #b6bbd0;/)
-  assert.match(blockFor('.person-meta span:last-child'), /text-align: right;/)
+  assert.match(blockFor('.person-meta span'), /color: var\(--muted\);/)
+  assert.match(app, /<span>\{person\.role\}<\/span>/)
+  assert.doesNotMatch(app, /<span>\{person\.since\}<\/span>/)
 })
 
 test('people carousel arrows preserve Figma wrapper orientation', () => {
@@ -103,14 +105,28 @@ test('people carousel left fade mirrors the right mask overlap', () => {
   assert.match(block, /width: calc\(var\(--side\) \+ 4px\);/)
 })
 
-test('person role labels clamp before colliding with since labels', () => {
-  const block = blockFor('.person-meta span:first-of-type')
+test('person role labels use the full metadata width without rendered since labels', () => {
+  const block = blockFor('.person-meta span')
 
   assert.match(block, /display: -webkit-box;/)
   assert.match(block, /overflow: hidden;/)
   assert.match(block, /-webkit-line-clamp: 2;/)
   assert.match(block, /-webkit-box-orient: vertical;/)
-  assert.match(block, /width: 132px;/)
+  assert.match(block, /width: 241\.432px;/)
+})
+
+test('mobile portrait image stays centered inside the frame', () => {
+  assert.match(
+    css,
+    /@media \(max-width: 1100px\) \{[\s\S]*?\.portrait-mask \{[\s\S]*?left: 50%;[\s\S]*?top: 50%;[\s\S]*?transform: translate\(-50%, -50%\);[\s\S]*?width: 203px;[\s\S]*?\}/,
+  )
+})
+
+test('mobile people carousel fade stays over the photo frame only', () => {
+  assert.match(
+    css,
+    /@media \(max-width: 1100px\) \{[\s\S]*?\.people-viewport \{[\s\S]*?position: relative;[\s\S]*?\}[\s\S]*?\.people-fade \{[\s\S]*?display: block;[\s\S]*?height: 270\.851px;[\s\S]*?top: 9\.447px;[\s\S]*?width: 110px;[\s\S]*?\}/,
+  )
 })
 
 test('people carousel expands the full card run and moves next arrow beside it on 4k viewports', () => {

@@ -49,6 +49,20 @@ test('footer about top rule is the rounded Figma shape', () => {
   assert.match(footerRule, /width: 401\.881px;/)
 })
 
+test('footer mark sits 110px after the social links on desktop', () => {
+  const footerMark = blockFor('.footer-mark')
+
+  assert.match(footerMark, /bottom: 7px;/)
+  assert.match(footerMark, /height: 448px;/)
+})
+
+test('mobile footer keeps padding between social links and the large logo mark', () => {
+  assert.match(
+    css,
+    /@media \(max-width: 1100px\) \{[\s\S]*?\.site-footer address \{[\s\S]*?margin: 36px 0 64px;[\s\S]*?\}[\s\S]*?\.footer-mark \{/,
+  )
+})
+
 test('footer contact labels and values use the Figma colors and type', () => {
   assert.match(blockFor('.site-footer address'), /margin-right: 0;/)
 
@@ -68,4 +82,24 @@ test('footer contact labels and values use the Figma colors and type', () => {
   assert.match(footerValues, /letter-spacing: 0\.6px;/)
   assert.match(footerValues, /line-height: 1\.7;/)
   assert.match(footerValues, /text-transform: uppercase;/)
+})
+
+test('footer social icons follow row text color without hover underlines', () => {
+  assert.match(app, /className="social-icon"/)
+  assert.match(app, /'--social-icon': `url\("\$\{instagramIcon\}"\)`/)
+  assert.match(app, /'--social-icon': `url\("\$\{facebookIcon\}"\)`/)
+  assert.match(app, /'--social-icon': `url\("\$\{linkedinIcon\}"\)`/)
+  assert.match(app, /href="https:\/\/www\.instagram\.com\/transparentevivo\/"/)
+  assert.match(app, /href="https:\/\/www\.facebook\.com\/profile\.php\?id=61591740781865"/)
+  assert.match(app, /href="https:\/\/www\.linkedin\.com\/company\/transparente-vivo"/)
+  assert.match(app, /aria-label=\{copy\.footer\.linkedin\}/)
+
+  const socialLink = blockFor('.social-links a')
+  const socialIcon = blockFor('.social-links .social-icon')
+
+  assert.match(socialLink, /background-image: none;/)
+  assert.match(socialIcon, /-webkit-mask-image: var\(--social-icon\);/)
+  assert.match(socialIcon, /background: currentColor;/)
+  assert.match(socialIcon, /color: inherit;/)
+  assert.match(socialIcon, /mask-image: var\(--social-icon\);/)
 })
