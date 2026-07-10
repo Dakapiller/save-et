@@ -73,7 +73,7 @@ test('people carousel arrows sit beside cards and remain visible on desktop', ()
 test('people carousel uses the same right fade treatment as the photo slider', () => {
   assert.match(
     app,
-    /<div className="people-viewport">[\s\S]*?<div aria-hidden="true" className="people-fade" \/>[\s\S]*?<ArrowButton\s+className="people-prev"/,
+    /<div className="people-viewport" ref=\{peopleViewportRef\}>[\s\S]*?<div aria-hidden="true" className="people-fade" \/>[\s\S]*?<ArrowButton\s+className="people-prev"/,
   )
 
   const block = blockFor('.people-fade')
@@ -88,13 +88,9 @@ test('people carousel uses the same right fade treatment as the photo slider', (
   assert.match(block, /z-index: 3;/)
 })
 
-test('people carousel left fade is hidden at the starting card', () => {
-  assert.match(app, /peopleIndex > 0 \? 'people-fade people-fade--left' : 'people-fade people-fade--left people-fade--hidden'/)
-
-  const block = blockFor('.people-fade--hidden')
-
-  assert.match(block, /opacity: 0;/)
-  assert.match(block, /visibility: hidden;/)
+test('looping people carousel keeps the left fade visible', () => {
+  assert.match(app, /className="people-fade people-fade--left"/)
+  assert.doesNotMatch(app, /people-fade--hidden/)
 })
 
 test('people carousel left fade mirrors the right mask overlap', () => {
@@ -125,14 +121,14 @@ test('mobile portrait image stays centered inside the frame', () => {
 test('mobile people carousel fade stays over the photo frame only', () => {
   assert.match(
     css,
-    /@media \(max-width: 1100px\) \{[\s\S]*?\.people-viewport \{[\s\S]*?position: relative;[\s\S]*?\}[\s\S]*?\.people-fade \{[\s\S]*?display: block;[\s\S]*?height: 270\.851px;[\s\S]*?top: 9\.447px;[\s\S]*?width: 110px;[\s\S]*?\}/,
+    /@media \(max-width: 1100px\) \{[\s\S]*?\.people-carousel \{[\s\S]*?position: relative;[\s\S]*?\}[\s\S]*?\.people-fade \{[\s\S]*?display: block;[\s\S]*?height: 270\.851px;[\s\S]*?top: 9\.447px;[\s\S]*?width: 110px;[\s\S]*?\}/,
   )
 })
 
 test('people carousel expands the full card run and moves next arrow beside it on 4k viewports', () => {
   assert.match(
     css,
-    /@media \(min-width: 2200px\) \{[\s\S]*?\.people-viewport \{[\s\S]*?width: 1545px;[\s\S]*?\}[\s\S]*?\.people-next \{[\s\S]*?left: calc\(100% \+ 20px\);[\s\S]*?right: auto;[\s\S]*?\}/,
+    /@media \(min-width: 2200px\) \{[\s\S]*?\.people-carousel \{[\s\S]*?width: 1545px;[\s\S]*?\}[\s\S]*?\.people-next \{[\s\S]*?left: calc\(100% \+ 20px\);[\s\S]*?right: auto;[\s\S]*?\}/,
   )
 })
 

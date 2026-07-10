@@ -140,7 +140,7 @@ export const content = {
         { label: 'Introdução', href: '#top' },
         { label: 'Dados', href: '#community' },
         { label: 'Comunidade', href: '#people' },
-        { label: 'Em que acreditamos', href: '#beliefs' },
+        { label: 'No que acreditamos', href: '#beliefs' },
         { label: 'Ecossistema', href: '#ecosystem' },
       ],
       petition: 'Assina a petição',

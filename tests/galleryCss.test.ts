@@ -23,44 +23,40 @@ test('gallery wrapper and arrows use desktop side placement', () => {
     blockFor('.gallery-wrap'),
     /width: min\(1381px, calc\(100vw - var\(--side\) - 1px\)\);/,
   )
-  assert.match(blockFor('.gallery-track'), /overflow: visible;/)
-  assert.match(blockFor('.gallery-track'), /will-change: transform;/)
-  assert.match(blockFor('.gallery-track img'), /border-radius: 10px;/)
-  assert.match(blockFor('.gallery-track img'), /object-position: center bottom;/)
+  assert.match(blockFor('.gallery-viewport'), /overflow: hidden;/)
+  assert.match(blockFor('.gallery-viewport'), /touch-action: pan-y pinch-zoom;/)
+  assert.match(blockFor('.gallery-slide img'), /border-radius: 10px;/)
+  assert.match(blockFor('.gallery-slide img'), /object-position: center center;/)
   assert.match(blockFor('.gallery-prev'), /left: -84px;/)
   assert.match(blockFor('.gallery-prev'), /top: 225px;/)
   assert.match(blockFor('.gallery-next'), /right: 66px;/)
   assert.match(blockFor('.gallery-next'), /top: 225px;/)
 })
 
-test('gallery carousel uses the same measured slide pattern as people carousel', () => {
+test('gallery carousel renders the original images once inside Embla slides', () => {
   assert.equal(
     app.match(/import galleryCommunity\d+ from '\.\/assets\/figma\/gallery\/gallery-\d+\.jpg'/g)?.length,
     19,
   )
   assert.match(
     app,
-    /const galleryCommunityImages = \[\n  galleryCommunity13,\n  galleryCommunity04,\n  galleryCommunity20,\n  galleryCommunity01,\n  galleryCommunity17,\n  galleryCommunity18,\n  galleryCommunity24,\n  galleryCommunity06,\n  galleryCommunity26,\n  galleryCommunity09,\n  galleryCommunity14,\n  galleryCommunity23,\n  galleryCommunity08,\n  galleryCommunity10,\n  galleryCommunity27,\n  galleryCommunity11,\n  galleryCommunity25,\n  galleryCommunity16,\n  galleryCommunity22,\n\] as const/,
+    /const galleryCommunityImages = \[\n {2}galleryCommunity13,\n {2}galleryCommunity04,\n {2}galleryCommunity20,\n {2}galleryCommunity01,\n {2}galleryCommunity17,\n {2}galleryCommunity18,\n {2}galleryCommunity24,\n {2}galleryCommunity06,\n {2}galleryCommunity26,\n {2}galleryCommunity09,\n {2}galleryCommunity14,\n {2}galleryCommunity23,\n {2}galleryCommunity08,\n {2}galleryCommunity10,\n {2}galleryCommunity27,\n {2}galleryCommunity11,\n {2}galleryCommunity25,\n {2}galleryCommunity16,\n {2}galleryCommunity22,\n\] as const/,
   )
   assert.match(app, /const galleryImages = galleryCommunityImages/)
-  assert.match(app, /const galleryTrackImages = \[\.\.\.galleryImages, galleryImages\[0\], galleryImages\[1\]\] as const/)
-  assert.match(app, /galleryTrackImages\.map\(\(image, index\) => \(/)
-  assert.match(app, /querySelector<HTMLElement>\('\.gallery-track'\)/)
-  assert.match(app, /const target = track\.children\[galleryIndex\] as HTMLElement \| undefined/)
-  assert.match(app, /x: -offsetOf\(\)/)
+  assert.doesNotMatch(app, /galleryTrackImages/)
+  assert.match(app, /galleryImages\.map\(\(image\) => \(/)
+  assert.match(app, /className="gallery-viewport" ref=\{galleryViewportRef\}/)
+  assert.match(app, /className="gallery-slide" key=\{image\}/)
   assert.match(app, /loading="lazy"/)
   assert.match(app, /decoding="async"/)
 })
 
-test('gallery carousel masks both sides with the same overlap treatment', () => {
-  assert.match(
-    app,
-    /galleryIndex > 0 \? 'gallery-fade gallery-fade--left' : 'gallery-fade gallery-fade--left gallery-fade--hidden'/,
-  )
+test('looping gallery keeps both overlap masks visible', () => {
+  assert.match(app, /className="gallery-fade gallery-fade--left"/)
+  assert.doesNotMatch(app, /gallery-fade--hidden/)
 
   const rightFade = blockFor('.gallery-fade')
   const leftFade = blockFor('.gallery-fade--left')
-  const hiddenFade = blockFor('.gallery-fade--hidden')
 
   assert.match(rightFade, /background: linear-gradient\(90deg, rgba\(255, 255, 255, 0\), #ffffff 137px, #ffffff\);/)
   assert.match(rightFade, /height: 513px;/)
@@ -75,8 +71,6 @@ test('gallery carousel masks both sides with the same overlap treatment', () => 
   assert.match(leftFade, /right: auto;/)
   assert.match(leftFade, /width: calc\(var\(--side\) \+ 1px\);/)
 
-  assert.match(hiddenFade, /opacity: 0;/)
-  assert.match(hiddenFade, /visibility: hidden;/)
 })
 
 test('gallery arrows use gallery-specific Figma assets', () => {
@@ -102,13 +96,13 @@ test('gallery hides the arrows in the mobile/tablet range (swipe-only)', () => {
   )
 })
 
-test('mobile gallery clips at the viewport wrapper, not the moving track', () => {
+test('mobile gallery clips at the Embla viewport, not the moving track', () => {
   assert.match(
     css,
-    /@media \(max-width: 1100px\) \{[\s\S]*?\.gallery-wrap \{[\s\S]*?overflow: hidden;[\s\S]*?\}[\s\S]*?\.gallery-track \{[\s\S]*?overflow: visible;[\s\S]*?width: max-content;[\s\S]*?\}/,
+    /\.gallery-viewport \{[\s\S]*?overflow: hidden;[\s\S]*?touch-action: pan-y pinch-zoom;[\s\S]*?\}/,
   )
   assert.doesNotMatch(
-    css,
-    /@media \(max-width: 1100px\) \{[\s\S]*?\.gallery-track \{[\s\S]*?overflow: hidden;[\s\S]*?width: 592px;[\s\S]*?\}/,
+    blockFor('.gallery-track'),
+    /overflow:/,
   )
 })
