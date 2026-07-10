@@ -5,11 +5,10 @@
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { CustomEase } from 'gsap/CustomEase'
-import { Observer } from 'gsap/Observer'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 
-gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, Observer, CustomEase)
+gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, CustomEase)
 
 // Stop the mobile address-bar show/hide from recalculating (and mis-firing)
 // trigger positions mid-scroll.
@@ -26,7 +25,6 @@ CustomEase.create('lift', '0.22, 0.61, 0.36, 1') // soft-out: hovers and small n
 export const ease = {
   arrival: 'arrival',
   lift: 'lift',
-  glide: 'power3.out',
   snap: 'back.out(1.6)',
 } as const
 
@@ -126,4 +124,4 @@ export function countUpTween(el: HTMLElement, duration = 1): gsap.core.Tween {
   })
 }
 
-export { gsap, useGSAP, ScrollTrigger, SplitText, Observer }
+export { gsap, useGSAP, ScrollTrigger, SplitText }

@@ -73,12 +73,12 @@ import statRestaurant from './assets/figma/vectors/stat-restaurant.svg'
 import whatsappIcon from './assets/figma/vectors/whatsapp.svg'
 import xIcon from './assets/figma/vectors/x.svg'
 import { content, type LanguageCode, languages, type PersonId } from './content'
+import { useSiteCarousel } from './carousel/useSiteCarousel'
 import {
   countUpTween,
   dur,
   ease,
   gsap,
-  Observer,
   prefersReduced,
   ScrollTrigger,
   SplitText,
@@ -102,16 +102,6 @@ type PeopleImageStyle = CSSProperties &
   >
 
 type SocialIconStyle = CSSProperties & Record<'--social-icon', string>
-
-type CarouselRotate = (direction: 'prev' | 'next') => void
-
-const handleCarouselGesture = (self: Observer, rotate: CarouselRotate) => {
-  if (Math.abs(self.deltaX) <= Math.abs(self.deltaY)) {
-    return
-  }
-
-  rotate(self.deltaX < 0 ? 'next' : 'prev')
-}
 
 const peopleImages = {
   alex: personAlex,
@@ -166,7 +156,6 @@ const galleryCommunityImages = [
   galleryCommunity22,
 ] as const
 const galleryImages = galleryCommunityImages
-const galleryTrackImages = [...galleryImages, galleryImages[0], galleryImages[1]] as const
 
 function EcosystemIcon({ index }: { index: number }) {
   if (index === 0) {
@@ -421,8 +410,6 @@ function App() {
   const [locale, setLocale] = useState<LanguageCode>('pt')
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeHref, setActiveHref] = useState('#top')
-  const [peopleIndex, setPeopleIndex] = useState(0)
-  const [galleryIndex, setGalleryIndex] = useState(0)
   const shellRef = useRef<HTMLDivElement>(null)
   const pendingScrollRef = useRef<string | null>(null)
   // True while the burger menu is open. The scroll lock momentarily reports
@@ -432,6 +419,51 @@ function App() {
   const copy = content[locale]
   const footerAboutBrand = 'Transparente Vivo'
   const [footerAboutPrefix, footerAboutSuffix = ''] = copy.footer.about.split(footerAboutBrand)
+
+  const peopleLabels = useMemo(
+    () => ({
+      carousel: locale === 'pt' ? 'Histórias da comunidade' : 'Community stories',
+      previous: locale === 'pt' ? 'Pessoa anterior' : 'Previous person',
+      next: locale === 'pt' ? 'Pessoa seguinte' : 'Next person',
+      slide: (first: number, _last: number, total: number) =>
+        locale === 'pt'
+          ? `Pessoa ${first + 1} de ${total}`
+          : `Person ${first + 1} of ${total}`,
+    }),
+    [locale],
+  )
+  const galleryLabels = useMemo(
+    () => ({
+      carousel: locale === 'pt' ? 'Galeria da comunidade' : 'Community gallery',
+      previous: locale === 'pt' ? 'Imagem anterior' : 'Previous image',
+      next: locale === 'pt' ? 'Imagem seguinte' : 'Next image',
+      slide: (first: number, _last: number, total: number) =>
+        locale === 'pt'
+          ? `Imagem ${first + 1} de ${total}`
+          : `Image ${first + 1} of ${total}`,
+    }),
+    [locale],
+  )
+  const {
+    viewportRef: peopleViewportRef,
+    goToPrevious: goToPreviousPerson,
+    goToNext: goToNextPerson,
+  } = useSiteCarousel({
+    delay: 7000,
+    labels: peopleLabels,
+    previousSelector: '.people-prev',
+    nextSelector: '.people-next',
+  })
+  const {
+    viewportRef: galleryViewportRef,
+    goToPrevious: goToPreviousImage,
+    goToNext: goToNextImage,
+  } = useSiteCarousel({
+    delay: 4500,
+    labels: galleryLabels,
+    previousSelector: '.gallery-prev',
+    nextSelector: '.gallery-next',
+  })
 
   const shareUrl = useMemo(() => {
     const text = encodeURIComponent(copy.cta.shareMessage)
@@ -504,24 +536,6 @@ function App() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [copy])
 
-  const rotatePeople = (direction: 'prev' | 'next') => {
-    setPeopleIndex((current) => {
-      if (direction === 'prev') {
-        return current === 0 ? copy.people.length - 4 : current - 1
-      }
-
-      return current >= copy.people.length - 4 ? 0 : current + 1
-    })
-  }
-
-  const rotateGallery = (direction: 'prev' | 'next') => {
-    setGalleryIndex((current) =>
-      direction === 'prev'
-        ? (current + galleryImages.length - 1) % galleryImages.length
-        : (current + 1) % galleryImages.length,
-    )
-  }
-
   // Main motion system: page-load hero sequence, scroll reveals, the timeline draw,
   // the orbit coming alive, count-ups, and the sticky-header condense. Re-runs on
   // locale change so SplitText + count-ups rebuild against the new copy.
@@ -546,29 +560,6 @@ function App() {
           header?.classList.toggle('is-condensed', self.isActive)
         },
       })
-
-      // Swipe/trackpad affordance for the mobile carousels. Their arrows are
-      // hidden below 1100px, so gesture input is the primary mobile control.
-      const peopleViewport = shell.querySelector('.people-viewport')
-      const galleryViewport = shell.querySelector('.gallery-wrap')
-      const peopleObserver = peopleViewport
-        ? Observer.create({
-            target: peopleViewport,
-            type: 'touch,pointer,wheel',
-            tolerance: 40,
-            wheelSpeed: -1,
-            onChange: (self) => handleCarouselGesture(self, rotatePeople),
-          })
-        : null
-      const galleryObserver = galleryViewport
-        ? Observer.create({
-            target: galleryViewport,
-            type: 'touch,pointer,wheel',
-            tolerance: 40,
-            wheelSpeed: -1,
-            onChange: (self) => handleCarouselGesture(self, rotateGallery),
-          })
-        : null
 
       const mm = gsap.matchMedia()
 
@@ -640,7 +631,7 @@ function App() {
           scrollTrigger: { trigger: '.ecosystem-section', start: 'top 70%', once: true },
         })
         // ---- Gallery reveal ----
-        gsap.from('.gallery-track img', {
+        gsap.from('.gallery-slide img', {
           autoAlpha: 0,
           scale: 1.06,
           duration: dur.medium,
@@ -966,70 +957,10 @@ function App() {
         })
         window.removeEventListener('load', refresh)
         headerTrigger.kill()
-        peopleObserver?.kill()
-        galleryObserver?.kill()
         mm.revert()
       }
     },
     { scope: shellRef, dependencies: [locale], revertOnUpdate: true },
-  )
-
-  // People carousel track — GSAP-eased slide driven by the active index.
-  // The per-card step (card width + flex gap) differs per breakpoint, so measure
-  // it from the live DOM instead of hardcoding a desktop value — a fixed step
-  // over-shifts on mobile, where cards are narrower, and drifts out of alignment.
-  useGSAP(
-    () => {
-      const track = shellRef.current?.querySelector<HTMLElement>('.people-track')
-      const first = track?.children[0] as HTMLElement | undefined
-      if (!track || !first) {
-        return
-      }
-
-      const stepOf = () =>
-        first.getBoundingClientRect().width + (parseFloat(getComputedStyle(track).columnGap) || 0)
-
-      gsap.to(track, {
-        x: -peopleIndex * stepOf(),
-        duration: prefersReduced() ? 0 : 0.6,
-        ease: ease.glide,
-      })
-
-      // The per-card step changes across breakpoints/orientation; re-snap to the
-      // active index on resize so the track never drifts out of alignment.
-      const onResize = () => gsap.set(track, { x: -peopleIndex * stepOf() })
-      window.addEventListener('resize', onResize)
-      return () => window.removeEventListener('resize', onResize)
-    },
-    { scope: shellRef, dependencies: [peopleIndex] },
-  )
-
-  // Gallery carousel uses the same measured slide pattern as people: the
-  // image step is breakpoint-dependent, so read it from the rendered track.
-  useGSAP(
-    () => {
-      const track = shellRef.current?.querySelector<HTMLElement>('.gallery-track')
-      const first = track?.children[0] as HTMLElement | undefined
-      if (!track || !first) {
-        return
-      }
-
-      const offsetOf = () => {
-        const target = track.children[galleryIndex] as HTMLElement | undefined
-        return target ? target.offsetLeft - first.offsetLeft : 0
-      }
-
-      gsap.to(track, {
-        x: -offsetOf(),
-        duration: prefersReduced() ? 0 : 0.6,
-        ease: ease.glide,
-      })
-
-      const onResize = () => gsap.set(track, { x: -offsetOf() })
-      window.addEventListener('resize', onResize)
-      return () => window.removeEventListener('resize', onResize)
-    },
-    { scope: shellRef, dependencies: [galleryIndex] },
   )
 
   return (
@@ -1161,10 +1092,12 @@ function App() {
                 ),
               )}
             </h2>
-            <div className="people-viewport">
-              <div className="people-track">
-                {copy.people.map((person) => (
-                  <article className="person-card" key={`${person.name}-${person.role}`}>
+            <div className="people-carousel">
+              <div className="people-viewport" ref={peopleViewportRef}>
+                <div className="people-track">
+                  {copy.people.map((person) => (
+                    <div className="people-slide" key={`${person.name}-${person.role}`}>
+                      <article className="person-card">
                     <div className="portrait-frame">
                       <img alt="" aria-hidden="true" className="portrait-frame-lines" src={personCardFrame} />
                       <div className="portrait-mask">
@@ -1183,32 +1116,29 @@ function App() {
                         />
                       </div>
                     </div>
-                    <blockquote>“{person.quote}”</blockquote>
-                    <div className="person-meta">
-                      <h3>{person.name}</h3>
-                      <span>{person.role}</span>
+                        <blockquote>“{person.quote}”</blockquote>
+                        <div className="person-meta">
+                          <h3>{person.name}</h3>
+                          <span>{person.role}</span>
+                        </div>
+                      </article>
                     </div>
-                  </article>
-                ))}
+                  ))}
+                </div>
               </div>
-              <div
-                aria-hidden="true"
-                className={
-                  peopleIndex > 0 ? 'people-fade people-fade--left' : 'people-fade people-fade--left people-fade--hidden'
-                }
-              />
+              <div aria-hidden="true" className="people-fade people-fade--left" />
               <div aria-hidden="true" className="people-fade" />
               <ArrowButton
                 className="people-prev"
                 direction="prev"
-                label="Previous person"
-                onClick={() => rotatePeople('prev')}
+                label={peopleLabels.previous}
+                onClick={goToPreviousPerson}
               />
               <ArrowButton
                 className="people-next"
                 direction="next"
-                label="Next person"
-                onClick={() => rotatePeople('next')}
+                label={peopleLabels.next}
+                onClick={goToNextPerson}
               />
             </div>
             <CampaignButton href={PETITION_URL}>{copy.peopleSection.cta}</CampaignButton>
@@ -1296,33 +1226,32 @@ function App() {
           </div>
         </section>
 
-        <section className="gallery-section" aria-label="Community gallery">
+        <section className="gallery-section" aria-label={galleryLabels.carousel}>
           <div className="gallery-wrap">
-            <div className="gallery-track">
-              {galleryTrackImages.map((image, index) => (
-                <img alt="" decoding="async" key={`${image}-${index}`} loading="lazy" src={image} />
-              ))}
+            <div className="gallery-viewport" ref={galleryViewportRef}>
+              <div className="gallery-track">
+                {galleryImages.map((image) => (
+                  <div className="gallery-slide" key={image}>
+                    <img alt="" decoding="async" loading="lazy" src={image} />
+                  </div>
+                ))}
+              </div>
             </div>
-            <div
-              aria-hidden="true"
-              className={
-                galleryIndex > 0 ? 'gallery-fade gallery-fade--left' : 'gallery-fade gallery-fade--left gallery-fade--hidden'
-              }
-            />
-            <div className="gallery-fade" />
+            <div aria-hidden="true" className="gallery-fade gallery-fade--left" />
+            <div aria-hidden="true" className="gallery-fade" />
             <ArrowButton
               className="gallery-prev"
               direction="prev"
               iconSrc={galleryArrowPrev}
-              label="Previous image"
-              onClick={() => rotateGallery('prev')}
+              label={galleryLabels.previous}
+              onClick={goToPreviousImage}
             />
             <ArrowButton
               className="gallery-next"
               direction="next"
               iconSrc={galleryArrowNext}
-              label="Next image"
-              onClick={() => rotateGallery('next')}
+              label={galleryLabels.next}
+              onClick={goToNextImage}
             />
           </div>
         </section>

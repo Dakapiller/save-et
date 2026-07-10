@@ -4,27 +4,21 @@ import { join } from 'node:path'
 import test from 'node:test'
 
 const app = readFileSync(join(process.cwd(), 'src', 'App.tsx'), 'utf8')
+const hook = readFileSync(join(process.cwd(), 'src', 'carousel', 'useSiteCarousel.ts'), 'utf8')
+const gsapSetup = readFileSync(join(process.cwd(), 'src', 'motion', 'gsap.ts'), 'utf8')
 
-test('mobile-hidden carousel arrows have drag and trackpad observers on both carousel surfaces', () => {
-  assert.match(app, /const peopleViewport = shell\.querySelector\('\.people-viewport'\)/)
-  assert.match(app, /const galleryViewport = shell\.querySelector\('\.gallery-wrap'\)/)
-
-  assert.match(app, /target: peopleViewport/)
-  assert.match(app, /target: galleryViewport/)
-  assert.equal(app.match(/type: 'touch,pointer,wheel'/g)?.length, 2)
-  assert.equal(app.match(/wheelSpeed: -1/g)?.length, 2)
-
-  assert.match(app, /onChange: \(self\) => handleCarouselGesture\(self, rotatePeople\)/)
-  assert.match(app, /onChange: \(self\) => handleCarouselGesture\(self, rotateGallery\)/)
-
-  assert.match(app, /peopleObserver\?\.kill\(\)/)
-  assert.match(app, /galleryObserver\?\.kill\(\)/)
+test('mobile-hidden carousel arrows are backed by Embla drag and wheel gestures', () => {
+  assert.match(app, /className="people-viewport" ref=\{peopleViewportRef\}/)
+  assert.match(app, /className="gallery-viewport" ref=\{galleryViewportRef\}/)
+  assert.match(hook, /draggable: true/)
+  assert.match(hook, /WheelGestures\(\{ forceWheelAxis: 'x' \}\)/)
+  assert.doesNotMatch(app, /Observer\.create/)
+  assert.doesNotMatch(gsapSetup, /gsap\/Observer/)
 })
 
-test('mobile carousel swipes use accumulated dominant movement instead of first-frame axis lock', () => {
-  assert.match(app, /const handleCarouselGesture = \(self: Observer, rotate: CarouselRotate\) => \{/)
-  assert.match(app, /Math\.abs\(self\.deltaX\) <= Math\.abs\(self\.deltaY\)/)
-  assert.match(app, /onChange: \(self\) => handleCarouselGesture\(self, rotatePeople\)/)
-  assert.match(app, /onChange: \(self\) => handleCarouselGesture\(self, rotateGallery\)/)
-  assert.doesNotMatch(app, /lockAxis: true/)
+test('mobile carousel swipes preserve vertical page scrolling and snap one slide', () => {
+  assert.match(hook, /slidesToScroll: 1/)
+  assert.match(hook, /dragFree: false/)
+  assert.match(hook, /skipSnaps: false/)
+  assert.match(hook, /dragThreshold: 10/)
 })
