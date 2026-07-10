@@ -1,7 +1,7 @@
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 
-import heroImage from './assets/figma/hero-optimized.jpeg'
+import heroImage from './assets/figma/hero-miin-dsc09179.jpeg'
 import signCtaImage from './assets/figma/gallery/gallery-15.jpg'
 import galleryCommunity01 from './assets/figma/gallery/gallery-01.jpg'
 import galleryCommunity04 from './assets/figma/gallery/gallery-04.jpg'
@@ -437,6 +437,10 @@ function App() {
     const text = encodeURIComponent(copy.cta.shareMessage)
     return `https://wa.me/?text=${text}`
   }, [copy.cta.shareMessage])
+
+  useEffect(() => {
+    document.documentElement.lang = locale
+  }, [locale])
 
   useEffect(() => {
     if (!menuOpen) {
@@ -1068,9 +1072,10 @@ function App() {
         <section className="hero-section">
           <div className="wrap hero-layout">
             <div className="hero-copy">
-              <h1>
+              <h1 key={`hero-title-${locale}`}>
                 <span>{copy.hero.titleStart} </span>
                 <strong>{copy.hero.titleEmphasis}</strong>
+                {locale === 'en' && <br />}
                 <span> {copy.hero.titleEnd}</span>
               </h1>
               <p>{copy.hero.body}</p>

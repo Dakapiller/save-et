@@ -200,9 +200,19 @@ test('desktop menu content matches the Figma menu structure', () => {
     'Introdução',
     'Dados',
     'Comunidade',
-    'Em que acreditamos',
+    'No que acreditamos',
     'Ecossistema',
   ])
   assert.equal(content.pt.nav.petition, 'Assina a petição')
   assert.equal(content.en.nav.petition, 'Sign the petition')
+})
+
+test('requested English campaign wording is present', () => {
+  assert.equal(content.en.cta.titleStart, 'Sign to')
+  assert.equal(content.en.cta.titleEmphasis, 'protect')
+  assert.equal(content.en.cta.titleEnd, 'this ecosystem')
+  assert.equal(content.en.history.timeline[3].label, 'Building 100% occupied')
+  assert.equal(content.en.hero.titleStart, 'A')
+  assert.equal(content.en.hero.titleEmphasis, 'living community')
+  assert.equal(content.en.hero.titleEnd, "is the city's heritage")
 })
